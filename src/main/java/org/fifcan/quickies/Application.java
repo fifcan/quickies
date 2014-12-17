@@ -1,15 +1,11 @@
 package org.fifcan.quickies;
 
-import org.fifcan.quickies.data.User;
-import org.fifcan.quickies.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
-import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguration;
 
 @Configuration
 @ComponentScan
@@ -17,8 +13,6 @@ import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguratio
 @EnableMongoRepositories
 public class Application implements CommandLineRunner {
 
-    @Autowired
-    private UserRepository repository;
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
@@ -26,6 +20,7 @@ public class Application implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+/*
         repository.deleteAll();
 
         // save a couple of users
@@ -48,6 +43,7 @@ public class Application implements CommandLineRunner {
         System.out.println("User found with findByEmail('rom1@email.org'):");
         System.out.println("--------------------------------");
         System.out.println(repository.findByEmail("rom1@email.org"));
+*/
 
     }
 }

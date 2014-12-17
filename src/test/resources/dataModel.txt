@@ -1,0 +1,46 @@
+command:
+1# mongo
+2# use quickies
+
+3# romain =  {name: "romain",   email: "roro@gmail.com", password: "$%^&*"}
+4# db.users.insert( romain )
+
+
+db.users.ensureIndex( { a: 1 }, { unique: true, sparse: true } )
+
+db.users.find( { "name" : "romain"} )
+
+
+eventType {addSession, deleteSession, addUser, deleteUser, updateUser, addVote}
+
+UserGroup {
+	users:
+}
+
+eventStore {
+
+		event {
+			user: <USER_ID>
+			time: <TIMESTAMP>
+			action: <COMMAND_ID>
+			param: {param1: <>, param2: <>
+		}
+
+	}
+
+
+}
+
+
+users = {
+	romain:   {name: "romain",   email: "roro@gmail.com", password: "$%^&*"}
+	philippe: {name: "philippe", email: "phil@gmail.com", password: "$%^&*"}
+}
+
+
+session {
+
+}
+
+
+(titre, description, user group)

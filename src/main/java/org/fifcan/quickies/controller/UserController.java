@@ -1,6 +1,10 @@
 package org.fifcan.quickies.controller;
 
 import org.fifcan.quickies.data.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,6 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UserController {
 
+    @Autowired
+    protected MongoTemplate mongoTemplate;
+
     @RequestMapping(
             method = RequestMethod.PUT,
             value = "/user")
@@ -20,7 +27,10 @@ public class UserController {
             @RequestParam(value="password", required = true) String password,
             @RequestParam(value="email", required = true) String email
     ) {
+
         final User user = new User(name, password, email);
+
+        mongoTemplate.save(user);
 
         return user;
 
@@ -33,8 +43,11 @@ public class UserController {
             @RequestParam(value="name", required = true) String name
     ) {
 
-        return new User(name, "fff", "roro@lo.com");
+        final Class<User> user = User.class;
 
+        return mongoTemplate.findOne(
+                new Query(Criteria.where("name").is(name)),
+                user) ;
     }
 
     @RequestMapping(

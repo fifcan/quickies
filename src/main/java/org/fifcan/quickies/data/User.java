@@ -2,22 +2,30 @@ package org.fifcan.quickies.data;
 
 import com.google.common.base.Objects;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * Created by romain on 15/12/14.
  */
+
+@Document(collection = "users")
 public class User {
 
     @Id
     private String id;
-    private String username;
+
+    @Indexed(unique = true)
+    private String name;
+
     private String password;
+
     private String email;
 
     public User(){}
 
-    public User(String username, String password, String email) {
-        this.username = username;
+    public User(String name, String password, String email) {
+        this.name = name;
         this.password = password;
         this.email = email;
     }
@@ -27,8 +35,8 @@ public class User {
         return id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
     public String getPassword() {
@@ -43,7 +51,7 @@ public class User {
     public String toString() {
         return Objects.toStringHelper(this)
                 .add("id", id)
-                .add("username", username)
+                .add("name", name)
                 .add("password", password)
                 .add("email", email)
                 .toString();
