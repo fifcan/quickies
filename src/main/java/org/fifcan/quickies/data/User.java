@@ -22,8 +22,18 @@ public class User {
         this.email = email;
     }
 
+<<<<<<< HEAD
     public String getId() {
         return id;
+=======
+    public User(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
+
+    public String getName() {
+        return name;
+>>>>>>> 6c265195f1de4da4da95845ecf3c62b4f2a26992
     }
 
     public String getUsername() {

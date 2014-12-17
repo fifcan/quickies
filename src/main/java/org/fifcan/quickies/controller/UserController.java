@@ -33,7 +33,7 @@ public class UserController {
             @RequestParam(value="name", required = true) String name
     ) {
 
-        return new User("rom", "fff", "roro@lo.com");
+        return new User(name, "fff", "roro@lo.com");
 
     }
 
