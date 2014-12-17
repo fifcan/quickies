@@ -1,4 +1,4 @@
-package org.fifcan.quickies.controler;
+package org.fifcan.quickies.controller;
 
 import org.fifcan.quickies.data.User;
 import org.springframework.web.bind.annotation.RequestMapping;
