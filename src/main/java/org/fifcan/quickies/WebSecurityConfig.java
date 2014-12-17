@@ -12,19 +12,20 @@ import org.springframework.security.config.annotation.web.servlet.configuration.
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-        .authorizeRequests()
-            .anyRequest().authenticated()
-            .and()
-        .formLogin()
-            .and()
-        .httpBasic().disable();
+        http.authorizeRequests().anyRequest().permitAll();/*
+                .antMatchers("/ ", "/sessions.html", "/js/*", "/css/*", "/fonts/*").permitAll()
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .anyRequest().authenticated() // 7
+                .and()
+                .formLogin()
+                .loginPage("/login.html")
+                .permitAll()*/;
     }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
-                .withUser("barry").password("password").roles("USER"); // ... etc.
+                .withUser("barry").password("password").roles("USER");
     }
 
 

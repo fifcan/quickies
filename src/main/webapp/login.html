@@ -41,8 +41,8 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li><a href="index.html"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
-                <li class="active"><a href="sessions.html">Sessions</a></li>
+                <li class="active"><a href="index.html"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
+                <li><a href="sessions.html">Sessions</a></li>
                 <li><a href="contacts.html">Contact</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
@@ -58,16 +58,6 @@
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li>
-                    <form class="navbar-form navbar-left" role="search">
-                        <div class="form-group">
-                            <input type="text" class="form-control input-sm" placeholder="Username">
-                            <input type="password" class="form-control input-sm" placeholder="Password">
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-xs">Se <connecter></connecter></button>
-                    </form>
-                </li>
-
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Philippe CANCELLIER <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
@@ -87,29 +77,41 @@
 
 <div class="container">
 
-
+    <!-- Main component for a primary marketing message or call to action -->
     <div class="jumbotron">
-        <h3>Sessions</h3>
 
+        <h3>Connexion</h3>
 
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title"><i class="fa fa-github"></i> Session 1 <small>Sous-titre de la session 1</small></h3>
+        <form class="form-horizontal" role="form">
+            <div class="form-group">
+                <label for="inputUsername" class="col-sm-2 control-label">Nom d'utilisateur</label>
+                <div class="col-sm-10">
+                    <input type="email" class="form-control" id="inputUsername" placeholder="Nom d'utilisateur">
+                </div>
             </div>
-            <div class="panel-body">
-                Contenu de la session 1
+            <div class="form-group">
+                <label for="inputPassword" class="col-sm-2 control-label">Mot de passe</label>
+                <div class="col-sm-10">
+                    <input type="password" class="form-control" id="inputPassword" placeholder="Mot de passe">
+                </div>
             </div>
-        </div>
-
-
-
-
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox"> Se souvenir de mes paramètres de connexion
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="button" class="btn btn-primary">Se connecter</button>
+                </div>
+            </div>
+        </form>
 
     </div>
-
-
-
-
 
 
 
