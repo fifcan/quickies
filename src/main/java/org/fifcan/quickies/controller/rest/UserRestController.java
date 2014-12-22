@@ -19,7 +19,7 @@ public class UserRestController {
     @Autowired
     protected MongoTemplate mongoTemplate;
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/user")
+    @RequestMapping(method = RequestMethod.PUT, value = "/rest/user")
     public User addUser(
             @RequestParam(value="name", required = true) String name,
             @RequestParam(value="password", required = true) String password,
@@ -29,13 +29,13 @@ public class UserRestController {
         return user;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/user")
+    @RequestMapping(method = RequestMethod.GET, value = "/rest/user")
     public User getUser(@RequestParam(value="name", required = true) String name) {
         final Class<User> user = User.class;
         return mongoTemplate.findOne(new Query(Criteria.where("name").is(name)), user) ;
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/user")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/rest/user")
     public User deleteUser(@RequestParam(value="name", required = true) String name) {
         return null;
     }
