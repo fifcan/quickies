@@ -6,10 +6,8 @@ import org.springframework.data.annotation.Id;
 /**
  * Created by romain on 15/12/14.
  */
-public class User {
+public class User extends AbstractData {
 
-    @Id
-    private String id;
     private String username;
     private String password;
     private String email;
@@ -23,10 +21,6 @@ public class User {
     }
 
 
-    public String getId() {
-        return id;
-    }
-
     public String getUsername() {
         return username;
     }
@@ -39,13 +33,16 @@ public class User {
         return email;
     }
 
-    @Override
-    public String toString() {
-        return Objects.toStringHelper(this)
-                .add("id", id)
-                .add("username", username)
-                .add("password", password)
-                .add("email", email)
-                .toString();
+    public void setUsername(String username) {
+        this.username = username;
     }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
 }

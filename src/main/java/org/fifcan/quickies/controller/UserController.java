@@ -1,51 +1,40 @@
 package org.fifcan.quickies.controller;
 
 import org.fifcan.quickies.data.User;
+import org.fifcan.quickies.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Created by romain on 15/12/14.
+ * Created by philippe on 21.12.14.
  */
-@RestController
+@Controller
 public class UserController {
 
-    @RequestMapping(
-            method = RequestMethod.PUT,
-            value = "/user")
-    public User addUser(
-            @RequestParam(value="name", required = true) String name,
-            @RequestParam(value="password", required = true) String password,
-            @RequestParam(value="email", required = true) String email
-    ) {
-        final User user = new User(name, password, email);
+    @Autowired
+    private UserRepository repository;
 
-        return user;
-
+    @RequestMapping(value = "/users", method = RequestMethod.GET)
+    public String get(Model model){
+        model.addAttribute("users", repository.findAll());
+        model.addAttribute("user", new User());
+        return "users";
     }
 
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = "/user")
-    public User getUser(
-            @RequestParam(value="name", required = true) String name
-    ) {
+    @RequestMapping(value = "/users/add", method = RequestMethod.POST)
+    public String addUser(@ModelAttribute User user, Model model) {
+        System.out.println(user);
+        repository.save(user);
 
-        return new User(name, "fff", "roro@lo.com");
+        model.addAttribute("user", new User());
 
+        model.addAttribute("users", repository.findAll());
+
+        return "users";
     }
-
-    @RequestMapping(
-            method = RequestMethod.DELETE,
-            value = "/user")
-    public User deleteUser(
-            @RequestParam(value="name", required = true) String name
-    ) {
-
-        return null;
-
-    }
-
 }

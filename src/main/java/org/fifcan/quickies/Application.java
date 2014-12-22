@@ -26,28 +26,28 @@ public class Application implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        repository.deleteAll();
-
-        // save a couple of users
-        repository.save(new User("fifcan", "fifcan", "fifcan@email.org"));
-        repository.save(new User("rom1", "rom1", "rom1@email.org"));
-
-        // fetch all users
-        System.out.println("Users found with findAll():");
-        System.out.println("-------------------------------");
-        for (User user : repository.findAll()) {
-            System.out.println(user);
-        }
-        System.out.println();
-
-        // fetch an individual user
-        System.out.println("User found with findByUsername('fifcan'):");
-        System.out.println("--------------------------------");
-        System.out.println(repository.findByUsername("fifcan"));
-
-        System.out.println("User found with findByEmail('rom1@email.org'):");
-        System.out.println("--------------------------------");
-        System.out.println(repository.findByEmail("rom1@email.org"));
+//        repository.deleteAll();
+//
+//        // save a couple of users
+//        repository.save(new User("fifcan", "fifcan", "fifcan@email.org"));
+//        repository.save(new User("rom1", "rom1", "rom1@email.org"));
+//
+//        // fetch all users
+//        System.out.println("Users found with findAll():");
+//        System.out.println("-------------------------------");
+//        for (User user : repository.findAll()) {
+//            System.out.println(user);
+//        }
+//        System.out.println();
+//
+//        // fetch an individual user
+//        System.out.println("User found with findByUsername('fifcan'):");
+//        System.out.println("--------------------------------");
+//        System.out.println(repository.findByUsername("fifcan"));
+//
+//        System.out.println("User found with findByEmail('rom1@email.org'):");
+//        System.out.println("--------------------------------");
+//        System.out.println(repository.findByEmail("rom1@email.org"));
 
     }
 }
