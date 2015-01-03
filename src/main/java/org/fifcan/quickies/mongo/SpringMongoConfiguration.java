@@ -13,6 +13,8 @@ import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 @Configuration
 public class SpringMongoConfiguration {
 
+    public @Bean UserDao getUserDao() throws Exception {return new UserDao(getMongoTemplate());};
+
     public @Bean
     MongoDbFactory getMongoDbFactory() throws Exception {
         return new SimpleMongoDbFactory(new MongoClient("localhost",27017), "quickies");

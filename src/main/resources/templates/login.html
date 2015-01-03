@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:tiles="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="favicon.ico">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <link rel="icon" href="favicon.ico" />
 
     <title>Quickies - GenevaJUG</title>
 
-    <link href="./css/bootstrap.min.css" rel="stylesheet">
-    <link href="./css/bootstrap-theme.min.css" rel="stylesheet">
-    <!--<link href="./css/bootstrap.yeti.min.css" rel="stylesheet">-->
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="./css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="./css/bootstrap-theme.min.css" rel="stylesheet"/>
+    <!--<link href="./css/bootstrap.yeti.min.css" rel="stylesheet"/> -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet"/>
 
-    <link href="./css/quickies.css" rel="stylesheet">
+    <link href="./css/quickies.css" rel="stylesheet"/>
 
     <script src="./js/jquery.1.11.1.min.js"></script>
     <script src="./js/bootstrap.min.js"></script>
@@ -82,31 +82,35 @@
 
         <h3>Connexion</h3>
 
-        <form class="form-horizontal" role="form">
+        <p th:if="${param.logout}" class="alert">You have been logged out</p>
+
+        <p th:if="${param.error}" class="alert alert-error">There was an error, please try again</p>
+
+        <form class="form-horizontal" role="form" th:action="@{/login}" method="post">
             <div class="form-group">
-                <label for="inputUsername" class="col-sm-2 control-label">Nom d'utilisateur</label>
+                <label for="username" class="col-sm-2 control-label">Nom d'utilisateur</label>
                 <div class="col-sm-10">
-                    <input type="email" class="form-control" id="inputUsername" placeholder="Nom d'utilisateur">
+                    <input type="email" class="form-control" id="username" name="username" placeholder="Nom d'utilisateur" />
                 </div>
             </div>
             <div class="form-group">
-                <label for="inputPassword" class="col-sm-2 control-label">Mot de passe</label>
+                <label for="password" class="col-sm-2 control-label">Mot de passe</label>
                 <div class="col-sm-10">
-                    <input type="password" class="form-control" id="inputPassword" placeholder="Mot de passe">
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Mot de passe" />
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox"> Se souvenir de mes paramètres de connexion
+                            <input type="checkbox" /> Se souvenir de mes paramètres de connexion
                         </label>
                     </div>
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
-                    <button type="button" class="btn btn-primary">Se connecter</button>
+                    <button type="submit" class="btn btn-primary" >Se connecter</button>
                 </div>
             </div>
         </form>
