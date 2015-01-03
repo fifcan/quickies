@@ -9,18 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * Created by philippe on 21.12.14.
  */
 @Controller
-public class HomeController {
+public class UserGroupController {
 
-    @RequestMapping(value="/")
+    @RequestMapping(value="/userGroups")
     public String index(Model model){
-        model.addAttribute("menu", Menu.HOME);
-        return "index";
+        model.addAttribute("menu", Menu.USER_GROUP);
+        return "userGroups";
     }
-
-    @RequestMapping(value="/about")
-    public String about(Model model){
-        model.addAttribute("menu", Menu.ABOUT);
-        return "about";
-    }
-
 }

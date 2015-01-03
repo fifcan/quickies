@@ -8,24 +8,20 @@
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="container">
             <div class="navbar-header">
-                <a class="navbar-brand" href="index.html">Quickies</a>
+                <a class="navbar-brand" href="/" th:text="#{app.title}"></a>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="/"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
-                    <li><a href="/sessions">Sessions</a></li>
-                    <li><a href="users">Utilisateurs</a></li>
-                    <li><a href="contacts">Contact</a></li>
+                    <li th:class="${menu.name() == 'HOME'} ? 'active'"><a href="/"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
+                    <li th:class="${menu.name() == 'USER_GROUP_SESSION'} ? 'active'"><a href="/userGroupSessions" th:text="#{menu.userGroupSessions}"></a></li>
+                    <li th:class="${menu.name() == 'ABOUT'} ? 'active'"><a href="/about" th:text="#{menu.about}"></a></li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">More <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="#">Action</a></li>
-                            <li><a href="#">Another action</a></li>
-                            <li><a href="#">Something else here</a></li>
+                            <li><a href="/userGroups"    th:text="#{menu.userGroups}"></a></li>
                             <li class="divider"></li>
-                            <li class="dropdown-header">Nav header</li>
-                            <li><a href="#">Separated link</a></li>
-                            <li><a href="#">One more separated link</a></li>
+                            <li class="dropdown-header" th:text="#{menu.administration}"></li>
+                            <li><a href="/users"    th:text="#{menu.users}"></a></li>
                         </ul>
                     </li>
                 </ul>

@@ -1,8 +1,5 @@
 package org.fifcan.quickies.data;
 
-import com.google.common.base.Objects;
-import org.springframework.data.annotation.Id;
-
 /**
  * Created by romain on 15/12/14.
  */

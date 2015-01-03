@@ -16,12 +16,16 @@ public abstract class AbstractData {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof AbstractData)) return false;
+        if (this == o)
+            return true;
+
+        if (!(o instanceof AbstractData))
+            return false;
 
         AbstractData that = (AbstractData) o;
 
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null)
+            return false;
 
         return true;
     }

@@ -1,7 +1,5 @@
 package org.fifcan.quickies.data;
 
-import java.util.Date;
-
 /**
  * Created by philippe on 21.12.14.
  */

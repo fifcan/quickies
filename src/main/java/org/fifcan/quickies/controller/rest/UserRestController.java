@@ -10,11 +10,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * Created by romain on 15/12/14.
  */
 @RestController
 public class UserRestController {
+
+    private static final Class<User> USER = User.class;
 
     @Autowired
     protected MongoTemplate mongoTemplate;
@@ -31,8 +35,12 @@ public class UserRestController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/rest/user")
     public User getUser(@RequestParam(value="name", required = true) String name) {
-        final Class<User> user = User.class;
-        return mongoTemplate.findOne(new Query(Criteria.where("name").is(name)), user) ;
+        return mongoTemplate.findOne(new Query(Criteria.where("name").is(name)), USER) ;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/rest/users")
+    public List<User> getUsers() {
+        return mongoTemplate.findAll(USER);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/rest/user")
