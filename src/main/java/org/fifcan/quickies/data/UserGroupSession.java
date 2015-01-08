@@ -1,5 +1,7 @@
 package org.fifcan.quickies.data;
 
+import com.google.common.base.Objects;
+
 import java.util.Date;
 
 /**
@@ -10,18 +12,18 @@ public class UserGroupSession extends AbstractData {
     private String name;
     private String description;
     private String userGroup;
-    private Date startTime;
-    private Date endTime;
+    private Date eventDate;
 
     public UserGroupSession() {
         super();
     }
 
-    public UserGroupSession(String name, String description, String userGroup) {
+    public UserGroupSession(String name, String description, String userGroup, Date eventDate) {
         this();
         this.name = name;
         this.description = description;
         this.userGroup = userGroup;
+        this.eventDate = eventDate;
     }
 
     public String getName() {
@@ -48,19 +50,21 @@ public class UserGroupSession extends AbstractData {
         this.userGroup = userGroup;
     }
 
-    public Date getStartTime() {
-        return startTime;
+    public Date getEventDate() {
+        return eventDate;
     }
 
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
+    public void setEventDate(Date eventDate) {
+        this.eventDate = eventDate;
     }
 
-    public Date getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("name", name)
+                .add("description", description)
+                .add("userGroup", userGroup)
+                .add("eventDate", eventDate)
+                .toString();
     }
 }

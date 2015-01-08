@@ -1,5 +1,7 @@
 package org.fifcan.quickies.data;
 
+import com.google.common.base.Objects;
+
 /**
  * Created by philippe on 21.12.14.
  */
@@ -34,4 +36,11 @@ public class UserGroup extends AbstractData {
         this.description = description;
     }
 
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("name", name)
+                .add("description", description)
+                .toString();
+    }
 }

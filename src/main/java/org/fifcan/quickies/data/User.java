@@ -1,5 +1,6 @@
 package org.fifcan.quickies.data;
 
+import com.google.common.base.Objects;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
@@ -79,4 +80,12 @@ public class User extends AbstractData implements UserDetails {
         this.email = email;
     }
 
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("username", username)
+                .add("password", password)
+                .add("email", email)
+                .toString();
+    }
 }
