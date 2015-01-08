@@ -27,7 +27,6 @@ public class UserDao implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
-        //return mongoTemplate.findOne(new Query(Criteria.where("name").is(name)), USER);
-        return new User("fifcan", "!@#soleil", "fifcan@no.mail");
+        return mongoTemplate.findOne(new Query(Criteria.where("name").is(name)), USER);
     }
 }
