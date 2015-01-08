@@ -1,7 +1,11 @@
 package org.fifcan.quickies;
 
+import org.fifcan.quickies.data.User;
+import org.fifcan.quickies.data.UserGroup;
+import org.fifcan.quickies.data.UserGroupSession;
 import org.fifcan.quickies.mongo.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
@@ -9,6 +13,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
@@ -31,8 +37,10 @@ import java.util.Map;
 @EnableAutoConfiguration
 @ComponentScan
 @Controller
-public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
+public class WebMvcConfiguration extends WebMvcConfigurerAdapter implements CommandLineRunner {
 
+    @Autowired
+    protected MongoTemplate database;
 
     @RequestMapping("/foo")
     public String foo() {
@@ -43,9 +51,53 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
         new SpringApplicationBuilder(WebMvcConfiguration.class).run(args);
     }
 
+
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/login").setViewName("login");
+    }
+
+    @Override
+    public void run(String... strings) throws Exception {
+
+        // Clear database
+        database.dropCollection(User.class);
+        database.dropCollection(UserGroup.class);
+        database.dropCollection(UserGroupSession.class);
+
+        // Create User
+        database.save(new User("fifcan", "fifcan", "fifcan@email.org"));
+        database.save(new User("rom1", "rom1", "rom1@email.org"));
+
+        // Create UserGroup
+        UserGroup genevaJUG = new UserGroup("Geneva JUG", "Java User Group in Geneva");
+        database.save(genevaJUG);
+        database.save(new UserGroup("Alpes JUG", "Java User Group in Grenoble"));
+
+        // Create UserGroupSession
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        database.save(new UserGroupSession("Spring Boot", "Spring boot session !", genevaJUG.getId(), dateFormat.parse("12/02/2015")));
+        database.save(new UserGroupSession("Tomcat", "Tomcat session !", genevaJUG.getId(), dateFormat.parse("12/01/2015")));
+        database.save(new UserGroupSession("Wildfly", "Wildfly session !", genevaJUG.getId(), dateFormat.parse("12/12/2014")));
+
+
+        System.out.println("Users found with findAll():");
+        System.out.println("-------------------------------");
+        for (User o : database.findAll(User.class)) {
+            System.out.println(o);
+        }
+
+        System.out.println("UserGroups found with findAll():");
+        System.out.println("-------------------------------");
+        for (UserGroup o : database.findAll(UserGroup.class)) {
+            System.out.println(o);
+        }
+
+        System.out.println("UserGroupSessions found with findAll():");
+        System.out.println("-------------------------------");
+        for (UserGroupSession o : database.findAll(UserGroupSession.class)) {
+            System.out.println(o);
+        }
     }
 
     @Configuration
@@ -59,7 +111,7 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
         protected void configure(HttpSecurity http) throws Exception {
             http
 
-                // access-denied-page: this is the page users will be
+                    // access-denied-page: this is the page users will be
                 // redirected to when they try to access protected areas.
                 .exceptionHandling()
                 .accessDeniedPage("/403")
@@ -72,8 +124,11 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter {
                 // the most catch-all type patterns should at the bottom of the list as the matches are executed
                 // in the order they are configured below. So /** (anyRequest()) should always be at the bottom of the list.
                 .authorizeRequests()
-                .antMatchers("/login**").permitAll()
-                .antMatchers("/admin/**").hasRole( "ADMIN" )
+                    .antMatchers("/login**").permitAll()
+                    .antMatchers("/css/**").permitAll()
+                    .antMatchers("/fonts/**").permitAll()
+                    .antMatchers("/js/**").permitAll()
+                    .antMatchers("/admin/**").hasRole( "ADMIN" )
                 .anyRequest().authenticated()
                 .and()
                 .requiresChannel()

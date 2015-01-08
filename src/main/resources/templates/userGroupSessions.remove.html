@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="fragments/head :: head">...</th:block>
+</head>
+<body>
+<div class="container">
+<div th:include="fragments/header :: header">...</div>
+
+    <form class="form-horizontal" role="form" th:action="@{/userGroupSessions/remove}" method="post">
+
+        <div class="panel panel-default panel-no-margin">
+
+            <div class="panel-heading">
+                <h3 class="panel-title">Supprimer une session</h3>
+            </div>
+
+            <div class="panel-body">
+
+                <div class="form-group">
+                    <label for="inputTitle" class="col-sm-2 control-label">Titre</label>
+                    <div class="col-sm-10">
+                        <input type="text" disabled="disabled" class="form-control" id="inputTitle" placeholder="Titre" th:field="*{userGroupSession.name}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputDescription" class="col-sm-2 control-label">Description</label>
+                    <div class="col-sm-10">
+                        <textarea disabled="disabled" class="form-control" id="inputDescription" placeholder="Description" rows="5" th:field="*{userGroupSession.description}"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputSpeaker" class="col-sm-2 control-label">Conférencier</label>
+                    <div class="col-sm-10">
+                        <input disabled="disabled" type="text" class="form-control" id="inputSpeaker" placeholder="Conférencier" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputSpeaker" class="col-sm-2 control-label">Java User Group</label>
+                    <div class="col-sm-10">
+                        <select disabled="disabled" class="form-control" th:field="*{userGroupSession.userGroup}">
+                            <option value="">Filtrer par JUG</option>
+                            <option th:each="userGroup : ${allUserGroups}" th:value="${userGroup.id}" th:text="${userGroup.name}"></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inputDate" class="col-sm-2 control-label">Date</label>
+                    <div class="col-sm-10">
+                        <input disabled="disabled" type="date" class="form-control" id="inputDate" placeholder="Date"  th:field="*{userGroupSession.eventDate}"/>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="panel-footer text-right">
+                <input type="hidden" class="form-control" id="inputId" th:field="*{userGroupSession.id}" />
+                <button type="submit" class="btn btn-primary">Remove</button>
+                <a th:href="@{/userGroupSessions}">Retour</a>
+            </div>
+
+        </div>
+    </form>
+
+</div> <!-- /container -->
+
+</body>
+</html>
