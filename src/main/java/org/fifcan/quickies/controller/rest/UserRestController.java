@@ -1,5 +1,6 @@
 package org.fifcan.quickies.controller.rest;
 
+import com.mongodb.WriteResult;
 import org.fifcan.quickies.data.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -35,7 +36,7 @@ public class UserRestController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/rest/user")
     public User getUser(@RequestParam(value="name", required = true) String name) {
-        return mongoTemplate.findOne(new Query(Criteria.where("name").is(name)), USER) ;
+        return mongoTemplate.findOne(new Query(Criteria.where("username").is(name)), USER) ;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/rest/users")
@@ -44,7 +45,8 @@ public class UserRestController {
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/rest/user")
-    public User deleteUser(@RequestParam(value="name", required = true) String name) {
-        return null;
+    public Boolean deleteUser(@RequestParam(value="name", required = true) String name) {
+        WriteResult result = mongoTemplate.remove(new Query(Criteria.where("username").is(name)), USER);
+        return result.isUpdateOfExisting();
     }
 }
