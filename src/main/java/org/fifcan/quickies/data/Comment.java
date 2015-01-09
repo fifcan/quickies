@@ -1,12 +1,14 @@
 package org.fifcan.quickies.data;
 
 import com.google.common.base.Objects;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
 /**
  * Created by philippe on 04.01.15.
  */
+@Document(collection = "comments")
 public class Comment extends AbstractData {
 
     private Date creationTime;

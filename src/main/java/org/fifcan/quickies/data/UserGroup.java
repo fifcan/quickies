@@ -1,10 +1,12 @@
 package org.fifcan.quickies.data;
 
 import com.google.common.base.Objects;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * Created by philippe on 21.12.14.
  */
+@Document(collection = "userGroups")
 public class UserGroup extends AbstractData {
 
     private String name;

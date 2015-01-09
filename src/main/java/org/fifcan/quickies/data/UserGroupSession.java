@@ -1,12 +1,14 @@
 package org.fifcan.quickies.data;
 
 import com.google.common.base.Objects;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
 /**
  * Created by philippe on 21.12.14.
  */
+@Document(collection = "UserGroupSessions")
 public class UserGroupSession extends AbstractData {
 
     private String name;
