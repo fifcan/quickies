@@ -65,9 +65,11 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter implements Comm
         database.dropCollection(UserGroup.class);
         database.dropCollection(UserGroupSession.class);
 
+        ShaPasswordEncoder passwordEncoder = new ShaPasswordEncoder();
+
         // Create User
-        database.save(new User("fifcan", "fifcan", "fifcan@email.org"));
-        database.save(new User("rom1", "rom1", "rom1@email.org"));
+        database.save(new User("fifcan", passwordEncoder.encodePassword("fifcan", null), "fifcan@email.org"));
+        database.save(new User("rom1", passwordEncoder.encodePassword("rom1", null), "rom1@email.org"));
 
         // Create UserGroup
         UserGroup genevaJUG = new UserGroup("Geneva JUG", "Java User Group in Geneva");
@@ -170,9 +172,7 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter implements Comm
 
         @Override
         public void configure(AuthenticationManagerBuilder auth) throws Exception {
-            auth.userDetailsService(userDao)
-                    //.passwordEncoder(new ShaPasswordEncoder())
-            ;
+            auth.userDetailsService(userDao).passwordEncoder(new ShaPasswordEncoder());
         }
     }
 }

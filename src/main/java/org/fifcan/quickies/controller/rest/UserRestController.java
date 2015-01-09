@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,7 +30,9 @@ public class UserRestController {
             @RequestParam(value="name", required = true) String name,
             @RequestParam(value="password", required = true) String password,
             @RequestParam(value="email", required = true) String email) {
-        final User user = new User(name, password, email);
+
+        ShaPasswordEncoder passwordEncoder = new ShaPasswordEncoder();
+        final User user = new User(name, passwordEncoder.encodePassword(password, null), email);
         mongoTemplate.save(user);
         return user;
     }
