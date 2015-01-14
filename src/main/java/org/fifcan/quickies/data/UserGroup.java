@@ -1,6 +1,7 @@
 package org.fifcan.quickies.data;
 
 import com.google.common.base.Objects;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
@@ -9,7 +10,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "userGroups")
 public class UserGroup extends AbstractData {
 
+    @Indexed(unique = true)
     private String name;
+
     private String description;
 
     public UserGroup() {
