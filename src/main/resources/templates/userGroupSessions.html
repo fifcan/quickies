@@ -13,20 +13,7 @@
 
                 <div class="well well-sm">
 
-                    <div class="panel panel-default" th:each="userGroupSession : ${allUserGroupSessions}">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">
-                                <span class="label label-default pull-right" th:text="${#dates.format(userGroupSession.eventDate, 'dd/MM/yyyy')}"></span>
-                                <i class="fa fa-github"></i>
-                                <a th:href="@{/userGroupSessions/view/__${userGroupSession.id}__}" th:text="${userGroupSession.name}"></a>
-                                <small>
-                                    <a th:href="@{/userGroupSessions/update/__${userGroupSession.id}__}" th:text="#{general.update}"></a>
-                                    <a th:href="@{/userGroupSessions/remove/__${userGroupSession.id}__}" th:text="#{general.remove}"></a>
-                                </small>
-                            </h3>
-                        </div>
-                        <div class="panel-body" th:text="${userGroupSession.description}"></div>
-                    </div>
+                    <div id="userGroupSessions" />
 
                 </div>
 
@@ -148,6 +135,52 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+
+    function createBootstrapPanel(){
+        var $panel = $('<div />').addClass('panel').addClass('panel-default');
+        $panel.append($('<div />').addClass('panel-heading').append($('<h3 class="panel-title"><i class="fa fa-github"></i><span /></h3>')));
+        $panel.append($('<div />').addClass('panel-body'));
+        return $panel;
+    };
+
+    var renderUserGroupSession = function(userGroupSession){
+        var $panel = createBootstrapPanel();
+        $panel.find('.panel-heading').find("span").text(userGroupSession.name);
+        $panel.find('.panel-body').append($('<span />').text(userGroupSession.description));
+        $('#userGroupSessions').append($panel);
+        /*
+        <div class="panel panel-default" th:each="userGroupSession : ${allUserGroupSessions}">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                <span class="label label-default pull-right" th:text="${#dates.format(userGroupSession.eventDate, 'dd/MM/yyyy')}"></span>
+
+                                <a th:href="@{/userGroupSessions/view/__${userGroupSession.id}__}" th:text="${userGroupSession.name}"></a>
+                                <small>
+                                    <a th:href="@{/userGroupSessions/update/__${userGroupSession.id}__}" th:text="#{general.update}"></a>
+                                    <a th:href="@{/userGroupSessions/remove/__${userGroupSession.id}__}" th:text="#{general.remove}"></a>
+                                </small>
+                            </h3>
+                        </div>
+                        <div class="panel-body" th:text="${userGroupSession.description}"></div>
+                    </div>
+                    */
+    };
+
+    (function(){
+
+        $.ajax({
+            url: "/api/userGroupSession"
+        }).done(function( data ) {
+            $.each(data, function(i, item){
+                renderUserGroupSession(item)
+            });
+        });
+
+    })();
+
+</script>
 
 </body>
 </html>
