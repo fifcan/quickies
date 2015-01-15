@@ -163,11 +163,15 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter implements Comm
                 .invalidateHttpSession(true)
                 .and()
 
+                .csrf().disable() // put back
+
                 // The session management is used to ensure the user only has one session. This isn't
                 // compulsory but can add some extra security to your application.
                 .sessionManagement()
                 .invalidSessionUrl("/login?time=1")
-                .maximumSessions(1);
+                .maximumSessions(1)
+
+            ;
         }
 
         @Override

@@ -2,45 +2,36 @@ package org.fifcan.quickies.mongo;
 
 import org.fifcan.quickies.data.User;
 import org.fifcan.quickies.data.UserGroup;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by deft on 03/01/2015.
  */
-public class UserDao implements UserDetailsService {
+public class UserGroupDao {
 
-    private static final Class<User> USER = User.class;
+    private static final Class<UserGroup> USER_GROUP_CLASS = UserGroup.class;
 
     protected MongoTemplate mongoTemplate;
 
-    public UserDao(MongoTemplate mongoTemplate) {
+    public UserGroupDao( MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
-        return mongoTemplate.findOne(new Query(Criteria.where("username").is(name)), USER);
+
+    public UserGroup findUserGroupById(String id) throws UsernameNotFoundException {
+        return mongoTemplate.findOne(new Query(Criteria.where("_id").is(id)), USER_GROUP_CLASS);
     }
 
-
-    public User findUserById(String id) throws UsernameNotFoundException {
-        return mongoTemplate.findOne(new Query(Criteria.where("_id").is(id)), USER);
+    public List<UserGroup> listGroups() {
+        return mongoTemplate.findAll(USER_GROUP_CLASS);
     }
-
-    public void updateUser(User user) {
-        mongoTemplate.save(user);
-    }
-
-
 }

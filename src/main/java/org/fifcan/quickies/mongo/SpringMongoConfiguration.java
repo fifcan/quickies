@@ -14,6 +14,11 @@ import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 public class SpringMongoConfiguration {
 
     @Bean
+    public UserGroupDao getUserGroupDao() throws Exception {
+        return new UserGroupDao(getMongoTemplate());
+    };
+
+    @Bean
     public UserDao getUserDao() throws Exception {
         return new UserDao(getMongoTemplate());
     };
