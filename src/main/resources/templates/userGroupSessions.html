@@ -122,10 +122,10 @@
 
                     <div class="panel-footer text-right">
                         <input type="hidden" name="id" value="" />
-                        <button type="submit" class="btn btn-primary">Ajouter</button>
-                        <button type="submit" class="btn btn-primary">Modifier</button>
-                        <button type="submit" class="btn btn-primary">Supprimer</button>
-                        <button type="reset" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                        <button name="operation" value="create" type="submit" class="btn btn-primary">Ajouter</button>
+                        <button name="operation" value="update" type="submit" class="btn btn-primary">Modifier</button>
+                        <button name="operation" value="remove" type="submit" class="btn btn-primary">Supprimer</button>
+                        <button name="operation" value="cancel" type="reset" class="btn btn-default" data-dismiss="modal">Annuler</button>
                     </div>
 
                 </div>
@@ -169,20 +169,14 @@
         $('#formAddUserGroupSession form').submit(function(e) {
             e.preventDefault(); // prevent actual form submit
 
-            var json = {
-                id: $(this).find(":input[name=id]").val(),
-                name: $(this).find(":input[name=name]").val(),
-                description: $(this).find(":input[name=description]").val(),
-                eventDate: $(this).find(":input[name=eventDate]").val(),
-                userGroup: $(this).find(":input[name=userGroup]").val()
-            };
+            var json = $(this).serializeJSON();
 
             $.ajax({
                 url: "/api/userGroupSession",
                 type : 'POST',
                 contentType: "application/json; charset=UTF-8",
                 dataType: "json",
-                data: JSON.stringify(json)
+                data: json
             }).done(function(){
                 $('#formAddUserGroupSession').modal('hide');
                 refreshUserGroupSessions();

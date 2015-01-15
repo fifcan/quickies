@@ -1,16 +1,15 @@
 (function(){
-    console.log("Loading quickies ...")
 
-    $.ajax({
-        url: "/rest/users",
-        beforeSend: function( xhr ) {
-            xhr.overrideMimeType( "text/plain; charset=x-user-defined" );
-        }
-    }).done(function( data ) {
-        if ( console && console.log ) {
-            console.log( "Sample of data:", data.slice( 0, 100 ) );
-        }
-    });
+    /**
+     * Serialize form element into a JSON string
+     * using jQuery primitive serializeArray
+     */
+    $.fn.serializeJSON = function(params){
+        var json = {};
+        $.each($(this).serializeArray(), function(i, item){
+            json[item.name]=item.value;
+        });
+        return JSON.stringify(json);
+    };
 
-    console.log("Loading quickies ... OK")
 })();
