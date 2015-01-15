@@ -2,11 +2,13 @@ package org.fifcan.quickies.data;
 
 import com.google.common.base.Objects;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by romain on 15/12/14.
@@ -21,6 +23,9 @@ public class User extends AbstractData implements UserDetails {
 
     @Indexed(unique = true)
     private String email;
+
+    @DBRef
+    private List<UserGroup> groups;
 
     public User(){}
 
@@ -78,6 +83,14 @@ public class User extends AbstractData implements UserDetails {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<UserGroup> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<UserGroup> groups) {
+        this.groups = groups;
     }
 
     @Override
