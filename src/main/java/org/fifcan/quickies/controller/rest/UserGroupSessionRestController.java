@@ -2,6 +2,7 @@ package org.fifcan.quickies.controller.rest;
 
 import com.mongodb.WriteResult;
 import org.fifcan.quickies.data.User;
+import org.fifcan.quickies.data.UserGroup;
 import org.fifcan.quickies.data.UserGroupSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -34,6 +35,12 @@ public class UserGroupSessionRestController {
     @RequestMapping(method = RequestMethod.GET, value = "/api/userGroupSession")
     public ResponseEntity<List<UserGroupSession>> getUsers() {
         return new ResponseEntity<List<UserGroupSession>>(mongoTemplate.findAll(CLASS), HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.POST, value = "/api/userGroupSession")
+    public ResponseEntity<UserGroupSession> saveUserGroupSession(@RequestBody UserGroupSession userGroupSession) {
+        mongoTemplate.save(userGroupSession);
+        return new ResponseEntity<UserGroupSession>(userGroupSession, HttpStatus.OK);
     }
 
 }

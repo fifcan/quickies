@@ -80,7 +80,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
 
-            <form class="form-horizontal" role="form" th:action="@{/userGroupSessions/add}" method="post">
+            <form class="form-horizontal" role="form">
 
                 <div class="panel panel-default panel-no-margin">
                     <div class="panel-heading">
@@ -92,25 +92,19 @@
                         <div class="form-group">
                             <label for="inputTitle" class="col-sm-2 control-label">Titre</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="inputTitle" placeholder="Titre" th:field="*{userGroupSession.name}" />
+                                <input name="name" type="text" class="form-control" id="inputTitle" placeholder="Titre" />
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="inputDescription" class="col-sm-2 control-label">Description</label>
                             <div class="col-sm-10">
-                                <textarea class="form-control" id="inputDescription" placeholder="Description" rows="5" th:field="*{userGroupSession.description}"></textarea>
+                                <textarea name="description" class="form-control" id="inputDescription" placeholder="Description" rows="5"></textarea>
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="inputSpeaker" class="col-sm-2 control-label">Conférencier</label>
+                            <label for="inputUserGroup" class="col-sm-2 control-label">Java User Group</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="inputSpeaker" placeholder="Conférencier" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="inputSpeaker" class="col-sm-2 control-label">Java User Group</label>
-                            <div class="col-sm-10">
-                                <select class="form-control" th:field="*{userGroupSession.userGroup}">
+                                <select id="inputUserGroup" name="userGroup" class="form-control">
                                     <option value="">Filtrer par JUG</option>
                                     <option th:each="userGroup : ${allUserGroups}" th:value="${userGroup.id}" th:text="${userGroup.name}"></option>
                                 </select>
@@ -119,14 +113,18 @@
                         <div class="form-group">
                             <label for="inputDate" class="col-sm-2 control-label">Date</label>
                             <div class="col-sm-10">
-                                <input type="datetime" class="form-control" id="inputDate" placeholder="Date"  th:field="*{userGroupSession.eventDate}"/>
+                                <input name="eventDate" type="date" class="col-sm-3 form-control" id="inputDate" placeholder="Date"/>
+                                <input name="eventTime" type="time" class="col-sm-2 form-control" id="inputTime" placeholder="Time"/>
                             </div>
                         </div>
 
                     </div>
 
                     <div class="panel-footer text-right">
+                        <input type="hidden" name="id" value="" />
                         <button type="submit" class="btn btn-primary">Ajouter</button>
+                        <button type="submit" class="btn btn-primary">Modifier</button>
+                        <button type="submit" class="btn btn-primary">Supprimer</button>
                         <button type="reset" class="btn btn-default" data-dismiss="modal">Annuler</button>
                     </div>
 
@@ -150,32 +148,46 @@
         $panel.find('.panel-heading').find("span").text(userGroupSession.name);
         $panel.find('.panel-body').append($('<span />').text(userGroupSession.description));
         $('#userGroupSessions').append($panel);
-        /*
-        <div class="panel panel-default" th:each="userGroupSession : ${allUserGroupSessions}">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">
-                                <span class="label label-default pull-right" th:text="${#dates.format(userGroupSession.eventDate, 'dd/MM/yyyy')}"></span>
-
-                                <a th:href="@{/userGroupSessions/view/__${userGroupSession.id}__}" th:text="${userGroupSession.name}"></a>
-                                <small>
-                                    <a th:href="@{/userGroupSessions/update/__${userGroupSession.id}__}" th:text="#{general.update}"></a>
-                                    <a th:href="@{/userGroupSessions/remove/__${userGroupSession.id}__}" th:text="#{general.remove}"></a>
-                                </small>
-                            </h3>
-                        </div>
-                        <div class="panel-body" th:text="${userGroupSession.description}"></div>
-                    </div>
-                    */
     };
 
-    (function(){
-
+    function refreshUserGroupSessions(){
         $.ajax({
             url: "/api/userGroupSession"
         }).done(function( data ) {
+            $('#userGroupSessions').empty();
             $.each(data, function(i, item){
-                renderUserGroupSession(item)
+                renderUserGroupSession(item);
             });
+        });
+    }
+
+    (function(){
+
+        refreshUserGroupSessions();
+
+        // Request Person by ID AJAX
+        $('#formAddUserGroupSession form').submit(function(e) {
+            e.preventDefault(); // prevent actual form submit
+
+            var json = {
+                id: $(this).find(":input[name=id]").val(),
+                name: $(this).find(":input[name=name]").val(),
+                description: $(this).find(":input[name=description]").val(),
+                eventDate: $(this).find(":input[name=eventDate]").val(),
+                userGroup: $(this).find(":input[name=userGroup]").val()
+            };
+
+            $.ajax({
+                url: "/api/userGroupSession",
+                type : 'POST',
+                contentType: "application/json; charset=UTF-8",
+                dataType: "json",
+                data: JSON.stringify(json)
+            }).done(function(){
+                $('#formAddUserGroupSession').modal('hide');
+                refreshUserGroupSessions();
+            });
+
         });
 
     })();
