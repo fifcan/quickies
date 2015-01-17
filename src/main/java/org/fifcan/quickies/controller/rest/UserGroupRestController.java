@@ -1,18 +1,13 @@
 package org.fifcan.quickies.controller.rest;
 
-import com.mongodb.WriteResult;
 import org.fifcan.quickies.data.User;
 import org.fifcan.quickies.data.UserGroup;
 import org.fifcan.quickies.mongo.UserDao;
 import org.fifcan.quickies.mongo.UserGroupDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.websocket.server.PathParam;
 import java.util.List;
 
 /**
@@ -45,6 +40,11 @@ public class UserGroupRestController {
     @RequestMapping(method = RequestMethod.GET, value = "/api/group")
     public List<UserGroup> listUserGroup() {
         return userGroupDao.listGroups();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/api/group/{groupId}")
+    public UserGroup getGroup(@PathVariable(value="groupId") String groupId) {
+        return userGroupDao.findUserGroupById(groupId);
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/api/user/{userId}/group/{groupId}")
