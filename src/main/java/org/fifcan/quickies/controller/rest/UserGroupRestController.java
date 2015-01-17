@@ -54,7 +54,11 @@ public class UserGroupRestController {
 
         final User user = userDao.findUserById(userId);
 
+        if (user == null) return null;
+
         final UserGroup userGroup = userGroupDao.findUserGroupById(groupId);
+
+        if (userGroup == null) return user;
 
         user.joinGroup(userGroup);
 
