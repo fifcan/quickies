@@ -26,7 +26,7 @@ public class UserRestController {
     @Autowired
     protected MongoTemplate mongoTemplate;
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/rest/user")
+    @RequestMapping(method = RequestMethod.POST, value = "/api/user")
     public User addUser(
             @RequestParam(value="name", required = true) String name,
             @RequestParam(value="password", required = true) String password,
@@ -38,18 +38,18 @@ public class UserRestController {
         return user;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/rest/user")
+    @RequestMapping(method = RequestMethod.GET, value = "/api/user")
     public User getUser(@RequestParam(value="name", required = true) String name) {
         return mongoTemplate.findOne(new Query(Criteria.where("username").is(name)), USER) ;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/rest/users")
+    @RequestMapping(method = RequestMethod.GET, value = "/api/users")
     public List<User> getUsers() {
         return mongoTemplate.findAll(USER);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or principal.id == #userId ")
-    @RequestMapping(method = RequestMethod.DELETE, value = "/rest/user")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/api/user")
     public Boolean deleteUser(@RequestParam(value="name", required = true) String name) {
         WriteResult result = mongoTemplate.remove(new Query(Criteria.where("username").is(name)), USER);
         return result.isUpdateOfExisting();
