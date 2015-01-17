@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -47,6 +48,7 @@ public class UserRestController {
         return mongoTemplate.findAll(USER);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN') or principal.id == #userId ")
     @RequestMapping(method = RequestMethod.DELETE, value = "/rest/user")
     public Boolean deleteUser(@RequestParam(value="name", required = true) String name) {
         WriteResult result = mongoTemplate.remove(new Query(Criteria.where("username").is(name)), USER);

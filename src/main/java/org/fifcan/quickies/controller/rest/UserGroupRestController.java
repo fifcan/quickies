@@ -1,11 +1,13 @@
 package org.fifcan.quickies.controller.rest;
 
+
 import org.fifcan.quickies.data.User;
 import org.fifcan.quickies.data.UserGroup;
 import org.fifcan.quickies.mongo.UserDao;
 import org.fifcan.quickies.mongo.UserGroupDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,6 +29,7 @@ public class UserGroupRestController {
     @Autowired
     protected MongoTemplate mongoTemplate;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @RequestMapping(method = RequestMethod.PUT, value = "/api/group")
     public UserGroup createUserGroup(
             @RequestParam(value="name", required = true) String name,
@@ -47,6 +50,7 @@ public class UserGroupRestController {
         return userGroupDao.findUserGroupById(groupId);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN') or principal.id == #userId ")
     @RequestMapping(method = RequestMethod.PUT, value = "/api/user/{userId}/group/{groupId}")
     public User joinGroup(
             @PathVariable(value="userId" ) String userId,
@@ -67,6 +71,7 @@ public class UserGroupRestController {
         return user;
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN') or principal.id == #userId ")
     @RequestMapping(method = RequestMethod.DELETE, value = "/api/user/{userId}/group/{groupId}")
     public User leaveGroup(
             @PathVariable(value="userId") String userId,

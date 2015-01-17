@@ -21,23 +21,18 @@ public abstract class AbstractData {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
+        if (o == null) return false;
 
-        if (!(o instanceof AbstractData))
-            return false;
+        if (getClass() != o.getClass()) return false;
 
-        AbstractData that = (AbstractData) o;
+        final AbstractData other = (AbstractData) o;
 
-        if (id != null ? !id.equals(that.id) : that.id != null)
-            return false;
-
-        return true;
+        return Objects.equal(this.getId(), other.getId());
     }
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        return Objects.hashCode(this.getId());
     }
 
     @Override
