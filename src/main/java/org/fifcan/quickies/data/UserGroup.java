@@ -45,6 +45,24 @@ public class UserGroup extends AbstractData {
     }
 
     @Override
+    public boolean equals(Object o) {
+
+        if (o == null) return false;
+
+        if (getClass() != o.getClass()) return false;
+
+        final UserGroup other = (UserGroup) o;
+
+        return Objects.equal(this.getId(), other.getId());
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hashCode(this.getId());
+    }
+
+    @Override
     public String toString() {
         return Objects.toStringHelper(this)
                 .add("name", name)

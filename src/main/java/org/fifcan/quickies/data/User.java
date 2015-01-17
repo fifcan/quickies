@@ -8,7 +8,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by romain on 15/12/14.
@@ -25,7 +26,7 @@ public class User extends AbstractData implements UserDetails {
     private String email;
 
     @DBRef
-    private List<UserGroup> groups;
+    private Set<UserGroup> groups;
 
     public User(){}
 
@@ -33,8 +34,8 @@ public class User extends AbstractData implements UserDetails {
         this.username = username;
         this.password = password;
         this.email = email;
+        this.groups = new HashSet<UserGroup>();
     }
-
 
     public String getUsername() {
         return username;
@@ -85,11 +86,11 @@ public class User extends AbstractData implements UserDetails {
         this.email = email;
     }
 
-    public List<UserGroup> getGroups() {
+    public Set<UserGroup> getGroups() {
         return groups;
     }
 
-    public void setGroups(List<UserGroup> groups) {
+    public void setGroups(Set<UserGroup> groups) {
         this.groups = groups;
     }
 
@@ -99,6 +100,27 @@ public class User extends AbstractData implements UserDetails {
                 .add("username", username)
                 .add("password", password)
                 .add("email", email)
+                .add("groups", groups)
                 .toString();
+    }
+
+
+    public void joinGroup(UserGroup groupJoined) {
+
+        if (groupJoined == null) return;
+
+        if (groups == null) {
+            groups = new HashSet<>();
+        }
+        groups.add(groupJoined);
+    }
+
+    public void leaveGroup(UserGroup groupToLeave) {
+
+        if (groupToLeave == null) return;
+
+        if (groups == null) return;
+
+        groups.remove(groupToLeave);
     }
 }

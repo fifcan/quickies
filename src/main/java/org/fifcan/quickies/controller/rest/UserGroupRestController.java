@@ -10,11 +10,9 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 /**
@@ -34,7 +32,7 @@ public class UserGroupRestController {
     @Autowired
     protected MongoTemplate mongoTemplate;
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/api/usergroup")
+    @RequestMapping(method = RequestMethod.PUT, value = "/api/group")
     public UserGroup createUserGroup(
             @RequestParam(value="name", required = true) String name,
             @RequestParam(value="description", required = true) String description) {
@@ -44,21 +42,41 @@ public class UserGroupRestController {
         return userGroup;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/api/usergroup")
+    @RequestMapping(method = RequestMethod.GET, value = "/api/group")
     public List<UserGroup> listUserGroup() {
         return userGroupDao.listGroups();
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/api/addUserToGroup")
-    public User addUserToGroup(
-            @RequestParam(value="userId", required = true) String userId,
-            @RequestParam(value="groupId", required = true) String groupId) {
+    @RequestMapping(method = RequestMethod.PUT, value = "/api/user/{userId}/group/{groupId}")
+    public User joinGroup(
+            @PathVariable(value="userId" ) String userId,
+            @PathVariable(value="groupId") String groupId) {
 
         final User user = userDao.findUserById(userId);
 
         final UserGroup userGroup = userGroupDao.findUserGroupById(groupId);
 
-        user.getGroups().add(userGroup);
+        user.joinGroup(userGroup);
+
+        userDao.updateUser(user);
+
+        return user;
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/api/user/{userId}/group/{groupId}")
+    public User leaveGroup(
+            @PathVariable(value="userId") String userId,
+            @PathVariable(value="groupId") String groupId) {
+
+        final User user = userDao.findUserById(userId);
+
+        if (user == null) return null;
+
+        final UserGroup userGroup = userGroupDao.findUserGroupById(groupId);
+
+        if (userGroup == null) return user;
+
+        user.leaveGroup(userGroup);
 
         userDao.updateUser(user);
 
