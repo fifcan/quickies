@@ -44,13 +44,11 @@
 
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title"><span class="label label-default pull-right">23-01-2014</span></h3>
+                        <h3 class="panel-title"><span class="label label-default pull-right">TODO nextSession date 23-01-2014</span></h3>
                     </div>
                     <div class="panel-body">
                         <ul>
-                            <li>Session 1</li>
-                            <li>Session 1</li>
-                            <li>Session 1</li>
+                            <li th:each="nextSession : ${nextSessions}" th:value="${nextSession.id}" th:text="${nextSession.name}"></li>
                         </ul>
                     </div>
                 </div>
