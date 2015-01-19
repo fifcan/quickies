@@ -2,7 +2,12 @@ package org.fifcan.quickies.controller;
 
 import org.apache.log4j.Logger;
 import org.fifcan.quickies.Menu;
-import org.fifcan.quickies.data.*;
+import org.fifcan.quickies.data.Comment;
+import org.fifcan.quickies.data.UserGroup;
+import org.fifcan.quickies.data.UserGroupSession;
+import org.fifcan.quickies.mongo.CommentDao;
+import org.fifcan.quickies.mongo.SessionDao;
+import org.fifcan.quickies.mongo.UserGroupDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -24,10 +29,20 @@ public class UserGroupSessionController {
     public static final Logger log = Logger.getLogger(UserGroupSessionController.class);
 
     @Autowired
+    SessionDao sessionDao;
+
+    @Autowired
+    UserGroupDao groupDao;
+
+    @Autowired
+    CommentDao commentDao;
+
+    @Autowired
     protected MongoTemplate database;
 
     @RequestMapping(value="/userGroupSessions", method = RequestMethod.GET)
     public String index(Model model){
+
         model.addAttribute("menu", Menu.USER_GROUP_SESSION);
 
         model.addAttribute("userGroupSession", new UserGroupSession());
@@ -37,18 +52,22 @@ public class UserGroupSessionController {
 
     @RequestMapping(value="/userGroupSessions/add", method = RequestMethod.POST)
     public String add(@ModelAttribute UserGroupSession userGroupSession) {
-        this.save(userGroupSession);
+
+        sessionDao.save(userGroupSession);
+
         return "redirect:/userGroupSessions";
     }
 
     @RequestMapping(value="/userGroupSessions/view/{id}", method = RequestMethod.GET)
     public String view(Model model, @PathVariable String id) {
-        UserGroupSession userGroupSession = this.database.findById(id, UserGroupSession.class);
+
+        UserGroupSession userGroupSession = sessionDao.findSessionById(id);
+
         model.addAttribute("userGroupSession", userGroupSession);
 
         List<Comment> comments = this.database.findAll(Comment.class);
-        model.addAttribute("comments", comments);
 
+        model.addAttribute("comments", comments);
         model.addAttribute("comment", new Comment(userGroupSession.getId()));
 
         return "userGroupSessions.view";
@@ -56,40 +75,44 @@ public class UserGroupSessionController {
 
     @RequestMapping(value="/userGroupSessions/update/{id}", method = RequestMethod.GET)
     public String update(Model model, @PathVariable String id) {
-        UserGroupSession userGroupSession = this.database.findById(id, UserGroupSession.class);
+
+        UserGroupSession userGroupSession = sessionDao.findSessionById(id);
+
         model.addAttribute("userGroupSession", userGroupSession);
         return "userGroupSessions.update";
     }
 
     @RequestMapping(value="/userGroupSessions/update", method = RequestMethod.POST)
     public String update(@ModelAttribute UserGroupSession userGroupSession) {
-        this.save(userGroupSession);
+
+        this.sessionDao.save(userGroupSession);
+
         return "redirect:/userGroupSessions";
     }
 
     @RequestMapping(value="/userGroupSessions/addComment", method = RequestMethod.POST)
     public String addComment(@ModelAttribute Comment comment) {
-        this.save(comment);
+
+        this.commentDao.save(comment);
+
         return "redirect:/userGroupSessions/view/" + comment.getUserGroupSession();
     }
 
     @RequestMapping(value="/userGroupSessions/remove/{id}", method = RequestMethod.GET)
     public String remove(Model model, @PathVariable String id) {
-        UserGroupSession userGroupSession = this.database.findById(id, UserGroupSession.class);
-        model.addAttribute("userGroupSession", userGroupSession);
+
+        UserGroupSession sessionRemoved = sessionDao.findSessionById(id);
+        boolean removed = sessionDao.remove(id);
+
+        model.addAttribute("userGroupSession", sessionRemoved);
         return "userGroupSessions.remove";
     }
 
     @RequestMapping(value="/userGroupSessions/remove", method = RequestMethod.POST)
     public String remove(@ModelAttribute UserGroupSession userGroupSession) {
-        UserGroupSession userGroupSessionDB = this.database.findById(userGroupSession.getId(), UserGroupSession.class);
-        this.database.remove(userGroupSessionDB);
-        return "redirect:/userGroupSessions";
-    }
 
-    private void save(AbstractData data) {
-        log.info("save " + data);
-        this.database.save(data);
+        boolean removed = sessionDao.remove(userGroupSession.getId());
+        return "redirect:/userGroupSessions";
     }
 
     @InitBinder
@@ -101,12 +124,18 @@ public class UserGroupSessionController {
 
     @ModelAttribute("allUserGroupSessions")
     public List<UserGroupSession> populateUserGroupSessions() {
-        return this.database.findAll(UserGroupSession.class);
+
+        return sessionDao.listSessions();
     }
 
     @ModelAttribute("allUserGroups")
     public List<UserGroup> populateUserGroups() {
-        return this.database.findAll(UserGroup.class);
+        return groupDao.listGroups();
+    }
+
+    @ModelAttribute("nextSession")
+    public UserGroupSession populateNextSession() {
+        return this.sessionDao.findNextSession();
     }
 
 }

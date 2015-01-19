@@ -29,6 +29,11 @@ public class SpringMongoConfiguration {
     };
 
     @Bean
+    public CommentDao getCommentDao() throws Exception {
+        return new CommentDao(getMongoTemplate());
+    };
+
+    @Bean
     public MongoDbFactory getMongoDbFactory() throws Exception {
         return new SimpleMongoDbFactory(new MongoClient("localhost",27017), "quickies");
     }

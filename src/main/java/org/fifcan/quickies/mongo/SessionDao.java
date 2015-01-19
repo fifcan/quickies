@@ -1,11 +1,14 @@
 package org.fifcan.quickies.mongo;
 
+import com.mongodb.WriteResult;
 import org.fifcan.quickies.data.UserGroup;
 import org.fifcan.quickies.data.UserGroupSession;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
+import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -22,7 +25,14 @@ public class SessionDao {
     }
 
     public UserGroupSession findSessionById(String id) {
-        return mongoTemplate.findOne(new Query(Criteria.where("id").is(id)), USER_GROUP_SESSION_CLASS) ;
+        return mongoTemplate.findOne(new Query(Criteria.where("id").is(id)), USER_GROUP_SESSION_CLASS);
+    }
+
+    public UserGroupSession findNextSession() {
+        LocalDate today = LocalDate.now();
+        LocalDate yesterday = today.minusDays(1);
+
+        return mongoTemplate.findOne(new Query(Criteria.where("eventDate").gt(yesterday)), USER_GROUP_SESSION_CLASS);
     }
 
     public List<UserGroupSession> listSessions() {
@@ -31,5 +41,12 @@ public class SessionDao {
 
     public void save(UserGroupSession userGroupSession) {
         mongoTemplate.save(userGroupSession);
+    }
+
+    public boolean remove(String id) {
+
+        WriteResult result = mongoTemplate.remove(new Query(Criteria.where("id").is(id)), USER_GROUP_SESSION_CLASS);
+
+        return result.isUpdateOfExisting();
     }
 }
