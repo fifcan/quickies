@@ -29,6 +29,11 @@ public class SpringMongoConfiguration {
     };
 
     @Bean
+    public VoteDao getVoteDao() throws Exception {
+        return new VoteDao();
+    };
+
+    @Bean
     public CommentDao getCommentDao() throws Exception {
         return new CommentDao(getMongoTemplate());
     };
