@@ -22,53 +22,27 @@
             <div class="col-sm-3">
 
                 <p>
-                    <button type="button" class="btn btn-primary btn-sm btn-block" data-toggle="modal" data-target="#formAddUserGroupSession">
-                        Ajouter une session
-                    </button>
+                    <input  class="form-control" type="text" id="search" name="search" value="" placeholder="Rechercher" />
+                </p>
+                <p>
+                    <select class="form-control">
+                        <option>Filtrer par JUG</option>
+                        <option th:each="userGroup : ${allUserGroups}" th:value="${userGroup.id}" th:text="${userGroup.name}"></option>
+                    </select>
                 </p>
 
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title"><span class="label label-default pull-right">Options</span></h3>
+                        <h3 class="panel-title">Top 3</h3>
                     </div>
-                    <div class="panel-body">
-                        <div>
-                            <!-- th:field="*{userGroupSession.userGroup}" -->
-                            <select class="form-control">
-                                <option>Filtrer par JUG</option>
-                                <option th:each="userGroup : ${allUserGroups}" th:value="${userGroup.id}" th:text="${userGroup.name}"></option>
-                            </select>
-                        </div>
-                    </div>
+                    <ul id="top-votes-future" class="list-group top-votes"/>
                 </div>
 
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title"><span class="label label-default pull-right">23-01-2014</span></h3>
+                        <h3 class="panel-title">Past Top 3</h3>
                     </div>
-                    <div class="panel-body">
-                        <ul>
-                            <li>Session 1</li>
-                            <li>Session 1</li>
-                            <li>Session 1</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title"><span class="label label-default pull-right">Votes</span></h3>
-                    </div>
-                    <div class="panel-body">
-                        <ul>
-                            <li>Session 1</li>
-                            <li>Session 1</li>
-                            <li>Session 1</li>
-                            <li class="text-muted">Session 1</li>
-                            <li class="text-muted">Session 1</li>
-                            <li class="text-muted">Session 1</li>
-                        </ul>
-                    </div>
+                    <ul id="top-votes-past" class="list-group top-votes"/>
                 </div>
 
             </div>
@@ -136,34 +110,13 @@
 
 <script type="text/javascript">
 
-    function createBootstrapPanel(){
-        var $panel = $('<div />').addClass('panel').addClass('panel-default');
-        $panel.append($('<div />').addClass('panel-heading').append($('<h3 class="panel-title"><i class="fa fa-github"></i><span /></h3>')));
-        $panel.append($('<div />').addClass('panel-body'));
-        return $panel;
-    };
-
-    var renderUserGroupSession = function(userGroupSession){
-        var $panel = createBootstrapPanel();
-        $panel.find('.panel-heading').find("span").text(userGroupSession.name);
-        $panel.find('.panel-body').append($('<span />').text(userGroupSession.description));
-        $('#userGroupSessions').append($panel);
-    };
-
-    function refreshUserGroupSessions(){
-        $.ajax({
-            url: "/api/userGroupSession"
-        }).done(function( data ) {
-            $('#userGroupSessions').empty();
-            $.each(data, function(i, item){
-                renderUserGroupSession(item);
-            });
-        });
-    }
-
     (function(){
 
+        // Chargement des sessions
         refreshUserGroupSessions();
+
+        // Chargement des top sessions
+        refreshTopVotes();
 
         // Request Person by ID AJAX
         $('#formAddUserGroupSession form').submit(function(e) {

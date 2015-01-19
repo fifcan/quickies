@@ -15,6 +15,7 @@ public class UserGroupSession extends AbstractData {
     private String description;
     private String userGroup;
     private Date eventDate;
+    private transient Integer votes;
 
     public UserGroupSession() {
         super();
@@ -28,36 +29,44 @@ public class UserGroupSession extends AbstractData {
         this.eventDate = eventDate;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getDescription() {
         return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getUserGroup() {
-        return userGroup;
-    }
-
-    public void setUserGroup(String userGroup) {
-        this.userGroup = userGroup;
     }
 
     public Date getEventDate() {
         return eventDate;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getUserGroup() {
+        return userGroup;
+    }
+
+    public Integer getVotes() {
+        return votes;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public void setEventDate(Date eventDate) {
         this.eventDate = eventDate;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setUserGroup(String userGroup) {
+        this.userGroup = userGroup;
+    }
+
+    public void setVotes(Integer votes) {
+        this.votes = votes;
     }
 
     @Override

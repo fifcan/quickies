@@ -1,8 +1,7 @@
 package org.fifcan.quickies;
 
-import org.fifcan.quickies.data.User;
-import org.fifcan.quickies.data.UserGroup;
-import org.fifcan.quickies.data.UserGroupSession;
+import com.mongodb.BasicDBObject;
+import org.fifcan.quickies.data.*;
 import org.fifcan.quickies.mongo.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -64,6 +63,8 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter implements Comm
         database.dropCollection(User.class);
         database.dropCollection(UserGroup.class);
         database.dropCollection(UserGroupSession.class);
+
+        database.getCollection("votes").createIndex(new BasicDBObject("user", 1).append("userGroupSession", 1), new BasicDBObject("unique", true));
 
         ShaPasswordEncoder passwordEncoder = new ShaPasswordEncoder();
 
