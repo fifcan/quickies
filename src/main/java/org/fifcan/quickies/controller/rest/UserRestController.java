@@ -2,6 +2,7 @@ package org.fifcan.quickies.controller.rest;
 
 import com.mongodb.WriteResult;
 import org.fifcan.quickies.data.User;
+import org.fifcan.quickies.mongo.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -21,10 +22,8 @@ import java.util.List;
 @RestController
 public class UserRestController {
 
-    private static final Class<User> USER = User.class;
-
     @Autowired
-    protected MongoTemplate mongoTemplate;
+    private UserDao userDao;
 
     @RequestMapping(method = RequestMethod.POST, value = "/api/user")
     public User addUser(
@@ -34,24 +33,29 @@ public class UserRestController {
 
         ShaPasswordEncoder passwordEncoder = new ShaPasswordEncoder();
         final User user = new User(name, passwordEncoder.encodePassword(password, null), email);
-        mongoTemplate.save(user);
+
+        userDao.save(user);
+
         return user;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/api/user")
     public User getUser(@RequestParam(value="name", required = true) String name) {
-        return mongoTemplate.findOne(new Query(Criteria.where("username").is(name)), USER) ;
+
+        return userDao.findUserByName(name);
+
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/api/users")
     public List<User> getUsers() {
-        return mongoTemplate.findAll(USER);
+
+        return userDao.listUsers();
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or principal.id == #userId ")
     @RequestMapping(method = RequestMethod.DELETE, value = "/api/user")
     public Boolean deleteUser(@RequestParam(value="name", required = true) String name) {
-        WriteResult result = mongoTemplate.remove(new Query(Criteria.where("username").is(name)), USER);
-        return result.isUpdateOfExisting();
+
+        return userDao.deleteUser(name);
     }
 }

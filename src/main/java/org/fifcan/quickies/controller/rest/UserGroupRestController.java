@@ -18,8 +18,6 @@ import java.util.List;
 @RestController
 public class UserGroupRestController {
 
-    private static final Class<UserGroup> USER_GROUP = UserGroup.class;
-
     @Autowired
     private UserDao userDao;
 
