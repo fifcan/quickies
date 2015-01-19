@@ -1,12 +1,8 @@
 package org.fifcan.quickies.controller.rest;
 
-import com.mongodb.WriteResult;
 import org.fifcan.quickies.data.User;
 import org.fifcan.quickies.mongo.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
