@@ -15,7 +15,9 @@ import org.springframework.core.annotation.Order;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,6 +38,8 @@ import java.util.Map;
 @EnableAutoConfiguration
 @ComponentScan
 @Controller
+@EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebMvcConfiguration extends WebMvcConfigurerAdapter implements CommandLineRunner {
 
     @Autowired
@@ -60,47 +64,55 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter implements Comm
     public void run(String... strings) throws Exception {
 
         // Clear database
+/*
         database.dropCollection(User.class);
         database.dropCollection(UserGroup.class);
         database.dropCollection(UserGroupSession.class);
+        */
 
         database.getCollection("votes").createIndex(new BasicDBObject("user", 1).append("userGroupSession", 1), new BasicDBObject("unique", true));
 
         ShaPasswordEncoder passwordEncoder = new ShaPasswordEncoder();
 
-        // Create User
-        database.save(new User("fifcan", passwordEncoder.encodePassword("fifcan", null), "fifcan@email.org"));
-        database.save(new User("rom1", passwordEncoder.encodePassword("rom1", null), "rom1@email.org"));
+        try {
+            // Create User
+            database.save(new User("fifcan", passwordEncoder.encodePassword("fifcan", null), "fifcan@email.org"));
+            database.save(new User("rom1", passwordEncoder.encodePassword("rom1", null), "rom1@email.org"));
 
-        // Create UserGroup
-        UserGroup genevaJUG = new UserGroup("Geneva JUG", "Java User Group in Geneva");
-        database.save(genevaJUG);
-        database.save(new UserGroup("Alpes JUG", "Java User Group in Grenoble"));
+            // Create UserGroup
+            UserGroup genevaJUG = new UserGroup("Geneva JUG", "Java User Group in Geneva");
+            database.save(genevaJUG);
+            database.save(new UserGroup("Alpes JUG", "Java User Group in Grenoble"));
 
-        // Create UserGroupSession
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        database.save(new UserGroupSession("Spring Boot", "Spring boot session !", genevaJUG.getId(), dateFormat.parse("12/02/2015")));
-        database.save(new UserGroupSession("Tomcat", "Tomcat session !", genevaJUG.getId(), dateFormat.parse("12/01/2015")));
-        database.save(new UserGroupSession("Wildfly", "Wildfly session !", genevaJUG.getId(), dateFormat.parse("12/12/2014")));
+            // Create UserGroupSession
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            database.save(new UserGroupSession("Spring Boot", "Spring boot session !", genevaJUG.getId(), dateFormat.parse("12/02/2015")));
+            database.save(new UserGroupSession("Tomcat", "Tomcat session !", genevaJUG.getId(), dateFormat.parse("12/01/2015")));
+            database.save(new UserGroupSession("Wildfly", "Wildfly session !", genevaJUG.getId(), dateFormat.parse("12/12/2014")));
 
 
-        System.out.println("Users found with findAll():");
-        System.out.println("-------------------------------");
-        for (User o : database.findAll(User.class)) {
-            System.out.println(o);
+            System.out.println("Users found with findAll():");
+            System.out.println("-------------------------------");
+            for (User o : database.findAll(User.class)) {
+                System.out.println(o);
+            }
+
+            System.out.println("UserGroups found with findAll():");
+            System.out.println("-------------------------------");
+            for (UserGroup o : database.findAll(UserGroup.class)) {
+                System.out.println(o);
+            }
+
+            System.out.println("UserGroupSessions found with findAll():");
+            System.out.println("-------------------------------");
+            for (UserGroupSession o : database.findAll(UserGroupSession.class)) {
+                System.out.println(o);
+            }
+
+        } catch (Throwable t) {
+
         }
 
-        System.out.println("UserGroups found with findAll():");
-        System.out.println("-------------------------------");
-        for (UserGroup o : database.findAll(UserGroup.class)) {
-            System.out.println(o);
-        }
-
-        System.out.println("UserGroupSessions found with findAll():");
-        System.out.println("-------------------------------");
-        for (UserGroupSession o : database.findAll(UserGroupSession.class)) {
-            System.out.println(o);
-        }
     }
 
     @Configuration

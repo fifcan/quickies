@@ -19,8 +19,18 @@ public class SpringMongoConfiguration {
     };
 
     @Bean
+    public SessionDao getSessionDao() throws Exception {
+        return new SessionDao(getMongoTemplate());
+    };
+
+    @Bean
     public UserDao getUserDao() throws Exception {
         return new UserDao(getMongoTemplate());
+    };
+
+    @Bean
+    public CommentDao getCommentDao() throws Exception {
+        return new CommentDao(getMongoTemplate());
     };
 
     @Bean

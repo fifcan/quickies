@@ -1,19 +1,14 @@
 package org.fifcan.quickies.controller.rest;
 
-import com.mongodb.WriteResult;
+
 import org.fifcan.quickies.data.User;
 import org.fifcan.quickies.data.UserGroup;
 import org.fifcan.quickies.mongo.UserDao;
 import org.fifcan.quickies.mongo.UserGroupDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,8 +17,6 @@ import java.util.List;
  */
 @RestController
 public class UserGroupRestController {
-
-    private static final Class<UserGroup> USER_GROUP = UserGroup.class;
 
     @Autowired
     private UserDao userDao;
@@ -34,7 +27,8 @@ public class UserGroupRestController {
     @Autowired
     protected MongoTemplate mongoTemplate;
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/api/usergroup")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @RequestMapping(method = RequestMethod.PUT, value = "/api/group")
     public UserGroup createUserGroup(
             @RequestParam(value="name", required = true) String name,
             @RequestParam(value="description", required = true) String description) {
@@ -44,21 +38,52 @@ public class UserGroupRestController {
         return userGroup;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/api/usergroup")
+    @RequestMapping(method = RequestMethod.GET, value = "/api/group")
     public List<UserGroup> listUserGroup() {
         return userGroupDao.listGroups();
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/api/addUserToGroup")
-    public User addUserToGroup(
-            @RequestParam(value="userId", required = true) String userId,
-            @RequestParam(value="groupId", required = true) String groupId) {
+    @RequestMapping(method = RequestMethod.GET, value = "/api/group/{groupId}")
+    public UserGroup getGroup(@PathVariable(value="groupId") String groupId) {
+        return userGroupDao.findUserGroupById(groupId);
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN') or principal.id == #userId ")
+    @RequestMapping(method = RequestMethod.PUT, value = "/api/user/{userId}/group/{groupId}")
+    public User joinGroup(
+            @PathVariable(value="userId" ) String userId,
+            @PathVariable(value="groupId") String groupId) {
 
         final User user = userDao.findUserById(userId);
 
+        if (user == null) return null;
+
         final UserGroup userGroup = userGroupDao.findUserGroupById(groupId);
 
-        user.getGroups().add(userGroup);
+        if (userGroup == null) return user;
+
+        user.joinGroup(userGroup);
+
+        userDao.updateUser(user);
+
+        return user;
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN') or principal.id == #userId ")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/api/user/{userId}/group/{groupId}")
+    public User leaveGroup(
+            @PathVariable(value="userId") String userId,
+            @PathVariable(value="groupId") String groupId) {
+
+        final User user = userDao.findUserById(userId);
+
+        if (user == null) return null;
+
+        final UserGroup userGroup = userGroupDao.findUserGroupById(groupId);
+
+        if (userGroup == null) return user;
+
+        user.leaveGroup(userGroup);
 
         userDao.updateUser(user);
 

@@ -8,7 +8,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by romain on 15/12/14.
@@ -25,7 +26,17 @@ public class User extends AbstractData implements UserDetails {
     private String email;
 
     @DBRef
-    private List<UserGroup> groups;
+    private Set<UserGroup> groups;
+
+    private Set<GrantedAuthority> grantedAuthorities;
+
+    private Boolean accountNonExpired;
+
+    private Boolean accountNonLocked;
+
+    private Boolean credentialsNonExpired;
+
+    private Boolean enabled;
 
     public User(){}
 
@@ -33,8 +44,13 @@ public class User extends AbstractData implements UserDetails {
         this.username = username;
         this.password = password;
         this.email = email;
+        this.groups = new HashSet<UserGroup>();
+        this.grantedAuthorities = new HashSet<GrantedAuthority>();
+        this.accountNonExpired = true;
+        this.accountNonLocked = true;
+        this.credentialsNonExpired = true;
+        this.enabled = true;
     }
-
 
     public String getUsername() {
         return username;
@@ -62,7 +78,7 @@ public class User extends AbstractData implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return grantedAuthorities;
     }
 
     public String getPassword() {
@@ -85,12 +101,52 @@ public class User extends AbstractData implements UserDetails {
         this.email = email;
     }
 
-    public List<UserGroup> getGroups() {
+    public Set<UserGroup> getGroups() {
         return groups;
     }
 
-    public void setGroups(List<UserGroup> groups) {
+    public void setGroups(Set<UserGroup> groups) {
         this.groups = groups;
+    }
+
+    public Set<GrantedAuthority> getGrantedAuthorities() {
+        return grantedAuthorities;
+    }
+
+    public void setGrantedAuthorities(Set<GrantedAuthority> grantedAuthorities) {
+        this.grantedAuthorities = grantedAuthorities;
+    }
+
+    public Boolean getAccountNonExpired() {
+        return accountNonExpired;
+    }
+
+    public void setAccountNonExpired(Boolean accountNonExpired) {
+        this.accountNonExpired = accountNonExpired;
+    }
+
+    public Boolean getAccountNonLocked() {
+        return accountNonLocked;
+    }
+
+    public void setAccountNonLocked(Boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
+    }
+
+    public Boolean getCredentialsNonExpired() {
+        return credentialsNonExpired;
+    }
+
+    public void setCredentialsNonExpired(Boolean credentialsNonExpired) {
+        this.credentialsNonExpired = credentialsNonExpired;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 
     @Override
@@ -99,6 +155,46 @@ public class User extends AbstractData implements UserDetails {
                 .add("username", username)
                 .add("password", password)
                 .add("email", email)
+                .add("groups", groups)
                 .toString();
+    }
+
+
+    public void joinGroup(UserGroup groupJoined) {
+
+        if (groupJoined == null) return;
+
+        if (groups == null) {
+            groups = new HashSet<>();
+        }
+        groups.add(groupJoined);
+    }
+
+    public void leaveGroup(UserGroup groupToLeave) {
+
+        if (groupToLeave == null) return;
+
+        if (groups == null) return;
+
+        groups.remove(groupToLeave);
+    }
+
+    public void grantAuthority(GrantedAuthority grantedAuthority) {
+
+        if (grantedAuthority == null) return;
+
+        if (grantedAuthorities == null) {
+            grantedAuthorities = new HashSet<>();
+        }
+        grantedAuthorities.add(grantedAuthority);
+    }
+
+    public void removeAuthority(GrantedAuthority grantedAuthority) {
+
+        if (grantedAuthority == null) return;
+
+        if (grantedAuthorities == null) return;
+
+        grantedAuthorities.remove(grantedAuthority);
     }
 }
