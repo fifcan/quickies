@@ -7,8 +7,11 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,11 +31,14 @@ public class SessionDao {
         return mongoTemplate.findOne(new Query(Criteria.where("id").is(id)), USER_GROUP_SESSION_CLASS);
     }
 
-    public UserGroupSession findNextSession() {
+    public List<UserGroupSession> findNextSessions() {
         LocalDate today = LocalDate.now();
-        LocalDate yesterday = today.minusDays(1);
+        LocalDate yesterdayLD = today.minusDays(1);
 
-        return mongoTemplate.findOne(new Query(Criteria.where("eventDate").gt(yesterday)), USER_GROUP_SESSION_CLASS);
+        Instant instant = yesterdayLD.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
+        Date yesterday = Date.from(instant);
+
+        return mongoTemplate.find(new Query(Criteria.where("eventDate").gt(yesterday)), USER_GROUP_SESSION_CLASS);
     }
 
     public List<UserGroupSession> listSessions() {

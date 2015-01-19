@@ -133,9 +133,9 @@ public class UserGroupSessionController {
         return groupDao.listGroups();
     }
 
-    @ModelAttribute("nextSession")
-    public UserGroupSession populateNextSession() {
-        return this.sessionDao.findNextSession();
+    @ModelAttribute("nextSessions")
+    public List<UserGroupSession> populateNextSessions() {
+        return this.sessionDao.findNextSessions();
     }
 
 }
