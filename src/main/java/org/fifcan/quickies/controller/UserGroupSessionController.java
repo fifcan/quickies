@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by philippe on 21.12.14.
@@ -135,7 +136,16 @@ public class UserGroupSessionController {
 
     @ModelAttribute("nextSessions")
     public List<UserGroupSession> populateNextSessions() {
-        return this.sessionDao.findNextSessions();
+
+        List<UserGroupSession> sessions = sessionDao.findNextSessions();
+
+        // Sort by date
+        sessions = sessions.stream()
+                .sorted((s1, s2) -> s1.getEventDate().compareTo(s2.getEventDate()))
+                .limit(3)
+                .collect(Collectors.toList());
+
+        return sessions;
     }
 
 }

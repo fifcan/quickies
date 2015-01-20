@@ -70,7 +70,8 @@ public class UserGroupSessionRestController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/api/userGroupSession/vote/top")
     public ResponseEntity<List<UserGroupSession>> getTopVotes() {
-        return new ResponseEntity<List<UserGroupSession>>(voteDao.getTopUserGroupSession(), HttpStatus.OK);
+
+        return new ResponseEntity<List<UserGroupSession>>(voteDao.getTopFutureSessions(3), HttpStatus.OK);
     }
 
 }
