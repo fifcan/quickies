@@ -40,7 +40,7 @@ public class VoteDao {
 
         DBCollection collection = mongoTemplate.getCollection("votes");
 
-        BasicDBObject dateQuery = new BasicDBObject ("$match", new BasicDBObject("eventDate", new BasicDBObject("$gt", todayDate)));
+       // BasicDBObject dateQuery = new BasicDBObject ("$match", new BasicDBObject("eventDate", new BasicDBObject("$gt", todayDate)));
 
         DBObject groupFields = new BasicDBObject( "_id", "$userGroupSession");
         groupFields.put("count", new BasicDBObject( "$sum", 1));
@@ -49,7 +49,7 @@ public class VoteDao {
         DBObject sortFields = new BasicDBObject("count", -1);
         DBObject sort = new BasicDBObject("$sort", sortFields );
 
-        AggregationOutput output = collection.aggregate(Arrays.asList(dateQuery, group, sort));
+        AggregationOutput output = collection.aggregate(Arrays.asList(group, sort));
 
         Iterable<DBObject> results = output.results();
 
