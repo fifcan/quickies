@@ -64,7 +64,6 @@ public class VoteDao {
         return Date.from(instant);
     }
 
-
     private AggregationOutput countSessionsVote() {
         DBCollection collection = mongoTemplate.getCollection("votes");
 
@@ -79,11 +78,18 @@ public class VoteDao {
     }
 
     private List<UserGroupSession> getUserGroupSessions(Predicate<UserGroupSession> dateFilter, int limit, Iterable<DBObject> results) {
-        return StreamSupport.stream(results.spliterator(), false)
-                .map(result -> mongoTemplate.findById(result.get("_id"), UserGroupSession.class))
+        return StreamSupport.stream(results.spliterator(), true)
+                .map(result -> buildSession(result))
                 .filter(dateFilter)
                 .limit(limit)
                 .collect(Collectors.toList());
+    }
+
+    private UserGroupSession buildSession(DBObject result) {
+        UserGroupSession session = mongoTemplate.findById(result.get("_id"), UserGroupSession.class);
+        Integer voteCount = (Integer) result.get("count");
+        session.setVotes(voteCount);
+        return session;
     }
 
     public void vote(Vote vote) {

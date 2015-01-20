@@ -15,7 +15,9 @@ import org.fifcan.quickies.mongo.SessionDao;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by philippe on 15/12/14.
@@ -69,9 +71,13 @@ public class UserGroupSessionRestController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/api/userGroupSession/vote/top")
-    public ResponseEntity<List<UserGroupSession>> getTopVotes() {
+    public ResponseEntity<Map<String, List<UserGroupSession>>> getTopVotes() {
 
-        return new ResponseEntity<List<UserGroupSession>>(voteDao.getTopFutureSessions(3), HttpStatus.OK);
+        Map<String, List<UserGroupSession>> topSessions = new HashMap<>();
+        topSessions.put("topNext", voteDao.getTopFutureSessions(3));
+        topSessions.put("topPrevious", voteDao.getTopPastSessions(3));
+
+        return new ResponseEntity<Map<String, List<UserGroupSession>>>(topSessions, HttpStatus.OK);
     }
 
 }
