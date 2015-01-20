@@ -78,4 +78,6 @@ public class UserGroupSession extends AbstractData {
                 .add("eventDate", eventDate)
                 .toString();
     }
+
+
 }

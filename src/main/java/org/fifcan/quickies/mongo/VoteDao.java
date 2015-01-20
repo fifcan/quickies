@@ -10,11 +10,14 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * Created by deft on 19/01/2015.
@@ -28,47 +31,61 @@ public class VoteDao {
     @Autowired
     protected MongoTemplate mongoTemplate;
 
-    public List<UserGroupSession> getTopUserGroupSession() {
+    public List<UserGroupSession> getTopFutureSessions(int limit) {
+
+        LocalDate todayLocalDate = LocalDate.now();
+
+        Instant instant = todayLocalDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
+        Date todayDate = Date.from(instant);
 
         DBCollection collection = mongoTemplate.getCollection("votes");
+
+        BasicDBObject dateQuery = new BasicDBObject ("$match", new BasicDBObject("eventDate", new BasicDBObject("$gt", todayDate)));
+
         DBObject groupFields = new BasicDBObject( "_id", "$userGroupSession");
         groupFields.put("count", new BasicDBObject( "$sum", 1));
         DBObject group = new BasicDBObject("$group", groupFields );
+
         DBObject sortFields = new BasicDBObject("count", -1);
         DBObject sort = new BasicDBObject("$sort", sortFields );
 
-        final List<UserGroupSession> topFutureSessions = new ArrayList<>(6);
-        final List<UserGroupSession> topPastSessions = new ArrayList<>(6);
+        AggregationOutput output = collection.aggregate(Arrays.asList(dateQuery, group, sort));
 
-        AggregationOutput output = collection.aggregate(Arrays.asList(group, sort));
         Iterable<DBObject> results = output.results();
-        for(DBObject result : results){
-            Object id = result.get("_id");
-            UserGroupSession userGroupSession = mongoTemplate.findById(id, UserGroupSession.class);
-            if (userGroupSession == null){
-                LOGGER.warn("userGroupSession not found : " + id);
-                continue;
-            }
-            Integer count = (Integer) result.get("count");
-            userGroupSession.setVotes(count);
 
+        return getUserGroupSessions(limit, results);
+    }
 
-            if (Calendar.getInstance().getTime().before(userGroupSession.getEventDate())){
-                if(topPastSessions.size() < 3){
-                    topPastSessions.add(userGroupSession);
-                }
-            } else {
-                if(topFutureSessions.size() < 3){
-                    topFutureSessions.add(userGroupSession);
-                }
-            }
-            if(topFutureSessions.size() == 3 && topPastSessions.size() == 3){
-                break;
-            }
-        }
-        topFutureSessions.addAll(topPastSessions);
+    public List<UserGroupSession> getTopPastSessions(int limit) {
 
-        return topFutureSessions;
+        LocalDate todayLocalDate = LocalDate.now();
+
+        Instant instant = todayLocalDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
+        Date todayDate = Date.from(instant);
+
+        DBCollection collection = mongoTemplate.getCollection("votes");
+
+        BasicDBObject dateQuery = new BasicDBObject ("$match", new BasicDBObject("eventDate", new BasicDBObject("$lt", todayDate)));
+
+        DBObject groupFields = new BasicDBObject( "_id", "$userGroupSession");
+        groupFields.put("count", new BasicDBObject( "$sum", 1));
+        DBObject group = new BasicDBObject("$group", groupFields );
+
+        DBObject sortFields = new BasicDBObject("count", -1);
+        DBObject sort = new BasicDBObject("$sort", sortFields );
+
+        AggregationOutput output = collection.aggregate(Arrays.asList(dateQuery, group, sort));
+
+        Iterable<DBObject> results = output.results();
+
+        return getUserGroupSessions(limit, results);
+    }
+
+    private List<UserGroupSession> getUserGroupSessions(int limit, Iterable<DBObject> results) {
+        return StreamSupport.stream(results.spliterator(), false)
+                .map(result -> mongoTemplate.findById(result.get("_id"), UserGroupSession.class))
+                .limit(limit)
+                .collect(Collectors.toList());
     }
 
 
