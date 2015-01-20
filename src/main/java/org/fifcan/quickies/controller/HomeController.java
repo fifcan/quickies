@@ -5,6 +5,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
+
 /**
  * Created by philippe on 21.12.14.
  */
@@ -12,15 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class HomeController {
 
     @RequestMapping(value="/")
-    public String index(Model model){
-        model.addAttribute("menu", Menu.HOME);
-        return "index";
-    }
-
-    @RequestMapping(value="/about")
-    public String about(Model model){
-        model.addAttribute("menu", Menu.ABOUT);
-        return "about";
+    public String index(){
+        return "redirect:/userGroupSessions";
     }
 
 }

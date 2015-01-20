@@ -10,13 +10,10 @@
         <div class="row">
 
             <div class="col-sm-9">
-
                 <div class="well well-sm">
-
                     <div id="userGroupSessions" />
-
+                    <div id="userGroupSession" />
                 </div>
-
             </div>
 
             <div class="col-sm-3">
@@ -33,30 +30,26 @@
 
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title"><span class="label label-default pull-right">TODO nextSession date 23-01-2014</span></h3>
+                        <h3 class="panel-title" th:text="#{future-userGroupSession}"></h3>
                     </div>
-                    <div class="panel-body">
-                        <ul>
-                            <li th:each="nextSession : ${nextSessions}" th:value="${nextSession.id}" th:text="${nextSession.name}"></li>
-                        </ul>
-                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item" th:each="nextSession : ${nextSessions}" th:value="${nextSession.id}" th:text="${nextSession.name}"></li>
+                    </ul>
                 </div>
 
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h4 class="panel-title">Top 3</h4>
+                        <h3 class="panel-title" th:text="#{top-votes-future}"></h3>
                     </div>
                     <ul id="top-votes-future" class="list-group top-votes"/>
                 </div>
 
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h4 class="panel-title">Top Past 3</h4>
+                        <h3 class="panel-title" th:text="#{top-votes-past}"></h3>
                     </div>
                     <ul id="top-votes-past" class="list-group top-votes"/>
                 </div>
-
-
 
             </div>
 
