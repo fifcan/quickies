@@ -139,16 +139,18 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter implements Comm
                 // the most catch-all type patterns should at the bottom of the list as the matches are executed
                 // in the order they are configured below. So /** (anyRequest()) should always be at the bottom of the list.
                 .authorizeRequests()
-                    .antMatchers("/login**").permitAll()
-                    .antMatchers("/css/**").permitAll()
-                    .antMatchers("/fonts/**").permitAll()
-                    .antMatchers("/js/**").permitAll()
-                    .antMatchers("/admin/**").hasRole( "ADMIN" )
-                .anyRequest().authenticated()
-                .and()
-                .requiresChannel()
+//                    .antMatchers("/login**").permitAll()
+//                    .antMatchers("/").permitAll()
+//                    .antMatchers("/userGroupSessions").permitAll()
+//                    .antMatchers("/css/**").permitAll()
+//                    .antMatchers("/fonts/**").permitAll()
+//                    .antMatchers("/js/**").permitAll()
+//                    .antMatchers("/admin/**").hasRole( "ADMIN" )
+                .anyRequest().permitAll()//.authenticated()
+                //.and()
+                //.requiresChannel()
                 //.anyRequest().requiresSecure() // TODO force HTTPS
-                .and()
+                //.and()
 
                 // This is where we configure our login form.
                 // login-page: the page that contains the login screen
@@ -157,23 +159,23 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter implements Comm
                 // authentication-failure-url: the URL to which the user will be redirected if they fail login
                 // username-parameter: the name of the request parameter which contains the username
                 // password-parameter: the name of the request parameter which contains the password
-                .formLogin()
-                .loginPage("/login")
-                .loginProcessingUrl("/login")
-                .defaultSuccessUrl("/")
-                .failureUrl("/login?err=1")
-                .usernameParameter("username")
-                .passwordParameter("password")
-                .and()
+//                .formLogin()
+//                .loginPage("/login")
+//                .loginProcessingUrl("/login")
+//                .defaultSuccessUrl("/")
+//                .failureUrl("/login?err=1")
+//                .usernameParameter("username")
+//                .passwordParameter("password")
+//                .and()
 
                 // This is where the logout page and process is configured. The logout-url is the URL to send
                 // the user to in order to logout, the logout-success-url is where they are taken if the logout
                 // is successful, and the delete-cookies and invalidate-session make sure that we clean up after logout
-                .logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/login?out=1")
-                .deleteCookies("JSESSIONID")
-                .invalidateHttpSession(true)
+//                .logout()
+//                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+////                .logoutSuccessUrl("/login?out=1")
+//                .deleteCookies("JSESSIONID")
+//                .invalidateHttpSession(true)
                 .and()
 
                 .csrf().disable() // put back
