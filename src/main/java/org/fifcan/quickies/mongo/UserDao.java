@@ -33,6 +33,10 @@ public class UserDao implements UserDetailsService {
         return mongoTemplate.findOne(new Query(Criteria.where("username").is(name)), USER);
     }
 
+    public User findUserByTwitterName(String twitterName) throws UsernameNotFoundException {
+        return mongoTemplate.findOne(new Query(Criteria.where("twitterName").is(twitterName)), USER);
+    }
+
     public User findUserById(String id) throws UsernameNotFoundException {
         return mongoTemplate.findOne(new Query(Criteria.where("_id").is(id)), USER);
     }
