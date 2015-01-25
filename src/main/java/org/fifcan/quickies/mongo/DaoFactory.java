@@ -1,6 +1,7 @@
 package org.fifcan.quickies.mongo;
 
 import com.mongodb.MongoClient;
+import org.fifcan.quickies.mongo.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.MongoDbFactory;
@@ -11,7 +12,7 @@ import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
  * Created by romain on 17/12/14.
  */
 @Configuration
-public class SpringMongoConfiguration {
+public class DaoFactory {
 
     @Bean
     public UserGroupDao getUserGroupDao() throws Exception {

@@ -31,6 +31,14 @@ public class SessionDao {
         return mongoTemplate.findOne(new Query(Criteria.where("id").is(id)), USER_GROUP_SESSION_CLASS);
     }
 
+    public UserGroupSession findSessionByName(String name) {
+        return mongoTemplate.findOne(new Query(Criteria.where("name").is(name)), USER_GROUP_SESSION_CLASS);
+    }
+
+    public UserGroupSession findSessionByTwitterTag(String twitterTag) {
+        return mongoTemplate.findOne(new Query(Criteria.where("twitterTag").is(twitterTag)), USER_GROUP_SESSION_CLASS);
+    }
+
     public List<UserGroupSession> findNextSessions() {
         LocalDate today = LocalDate.now();
         LocalDate yesterdayLD = today.minusDays(1);

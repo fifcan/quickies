@@ -15,6 +15,7 @@ public class UserGroupSession extends AbstractData {
     private String description;
     private String userGroup;
     private Date eventDate;
+    private String twitterTag;
     private transient Integer votes;
 
     public UserGroupSession() {
@@ -67,6 +68,14 @@ public class UserGroupSession extends AbstractData {
 
     public void setVotes(Integer votes) {
         this.votes = votes;
+    }
+
+    public String getTwitterTag() {
+        return twitterTag;
+    }
+
+    public void setTwitterTag(String twitterTag) {
+        this.twitterTag = twitterTag;
     }
 
     @Override
