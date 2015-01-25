@@ -15,6 +15,11 @@ import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 public class DaoFactory {
 
     @Bean
+    public TwitterProcessingDao getTwitterProcessingDao() throws Exception {
+        return new TwitterProcessingDao(getMongoTemplate());
+    };
+
+    @Bean
     public UserGroupDao getUserGroupDao() throws Exception {
         return new UserGroupDao(getMongoTemplate());
     };
