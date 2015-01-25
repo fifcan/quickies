@@ -20,7 +20,7 @@ public class TwitterServiceTest {
         // #UGQuickie #Vote #Wildfly
 
 
-        new TwitterService().buildVote(tweet);
+        new TwitterService().buildVotes(tweet);
 
 
     }
