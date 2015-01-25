@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.twitter.api.*;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -19,6 +21,8 @@ import java.util.stream.Collectors;
 public class TwitterService {
 
     static final String VOTE_TAG = "#Vote";
+
+    static final String HASH_TAG = "#";
 
     @Autowired
     Twitter twitter;
@@ -53,10 +57,12 @@ public class TwitterService {
 
     public List<Vote> buildVotes(Tweet tweet) {
 
-        String twitterUser = tweet.getFromUser();
+        Long twitterUserId = tweet.getFromUserId();
 
-        // todo get user from tweet
-        User user = userDao.findUserByName(twitterUser);
+        User user = userDao.findUserByTwitterUserId(twitterUserId);
+
+        // If the twitter user is not registered on Quickie no vote !
+        if (user == null) return Collections.emptyList();
 
         List<String> tags = Splitter.on(" ")
                 .omitEmptyStrings()
@@ -64,10 +70,11 @@ public class TwitterService {
                 .splitToList(tweet.getText());
 
         List<Vote> votes = tags.stream()
-                .filter(s -> s.startsWith(VOTE_TAG))
+                .filter(s -> s.startsWith(HASH_TAG))
                 .map(s -> extractSession(s))
-                // Load session ? .map(s -> sessionDao.findSessionByName(s))
-                .map(s -> new Vote(s, user))
+                .map(s -> sessionDao.findSessionByTwitterTag(s))
+                .filter(Objects::nonNull) // If session not found no vote
+                .map(s -> new Vote(s.getName(), user))
                 .collect(Collectors.toList());
 
         return votes;

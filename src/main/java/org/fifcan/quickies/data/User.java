@@ -26,7 +26,7 @@ public class User extends AbstractData implements UserDetails {
     private String email;
 
     @Indexed(unique = true)
-    private String twitterUserProfileId;
+    private Long twitterUserId;
 
     @DBRef
     private Set<UserGroup> groups;
@@ -148,12 +148,12 @@ public class User extends AbstractData implements UserDetails {
         return enabled;
     }
 
-    public String getTwitterUserProfileId() {
-        return twitterUserProfileId;
+    public Long getTwitterUserId() {
+        return twitterUserId;
     }
 
-    public void setTwitterUserProfileId(String twitterUserProfileId) {
-        this.twitterUserProfileId = twitterUserProfileId;
+    public void setTwitterUserId(Long twitterUserId) {
+        this.twitterUserId = twitterUserId;
     }
 
     public void setEnabled(Boolean enabled) {
