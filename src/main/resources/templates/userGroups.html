@@ -5,7 +5,12 @@
 </head>
 <body>
 <div class="container">
-<div th:include="fragments/header :: header">...</div>
+    <div th:include="fragments/header :: header">...</div>
+
+        <ol class="breadcrumb">
+            <li><a th:href="@{/}">Quickies</a></li>
+            <li class="active">Groupes d'utilisateurs</li>
+        </ol>
 
         <div class="row">
 
