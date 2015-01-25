@@ -23,11 +23,4 @@ public class TwitterRestController {
         return twitterService.getAllTweets();
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/api/twitter/vote")
-    public List getUGQuickieVote() {
-
-        return twitterService.getTwitterVotes();
-    }
-
-
 }
