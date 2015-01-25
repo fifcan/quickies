@@ -1,6 +1,7 @@
 package org.fifcan.quickies.twitter;
 
 import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
 import org.fifcan.quickies.data.User;
 import org.fifcan.quickies.data.Vote;
 import org.fifcan.quickies.mongo.SessionDao;
@@ -24,6 +25,12 @@ public class TwitterService {
 
     static final String HASH_TAG = "#";
 
+    static final String SPACE = " ";
+
+    static final String GENEVA_JUG_TWITTER_NAME = "@GenevaJUG";
+
+    static final String QUICKIE_TAG = "#UGQuickie";
+
     @Autowired
     Twitter twitter;
 
@@ -37,7 +44,7 @@ public class TwitterService {
 
         TimelineOperations timelineOperations = twitter.timelineOperations();
 
-        List<Tweet> tweets = timelineOperations.getUserTimeline("@GenevaJUG");
+        List<Tweet> tweets = timelineOperations.getUserTimeline(GENEVA_JUG_TWITTER_NAME);
 
         return tweets;
     }
@@ -46,7 +53,7 @@ public class TwitterService {
 
         SearchOperations searchOperations = twitter.searchOperations();
 
-        SearchResults searchResults = searchOperations.search("#UGQuickie");
+        SearchResults searchResults = searchOperations.search(QUICKIE_TAG);
 
         return searchResults.getTweets().stream()
                 .filter(t -> t.hasTags() && t.getText().toLowerCase().contains(VOTE_TAG))
@@ -64,14 +71,13 @@ public class TwitterService {
         // If the twitter user is not registered on Quickie no vote !
         if (user == null) return Collections.emptyList();
 
-        List<String> tags = Splitter.on(" ")
+        List<String> tags = Splitter.on(SPACE)
                 .omitEmptyStrings()
                 .trimResults()
                 .splitToList(tweet.getText());
 
         List<Vote> votes = tags.stream()
-                .filter(s -> s.startsWith(HASH_TAG))
-                .map(s -> extractSession(s))
+                .filter(s -> isTwitterTag(s))
                 .map(s -> sessionDao.findSessionByTwitterTag(s))
                 .filter(Objects::nonNull) // If session not found no vote
                 .map(s -> new Vote(s.getName(), user))
@@ -80,7 +86,7 @@ public class TwitterService {
         return votes;
     }
 
-    private static String extractSession(String voteSession) {
-        return voteSession.substring(VOTE_TAG.length() + 1);
+    private static boolean isTwitterTag(String str) {
+        return Strings.nullToEmpty(str).startsWith(HASH_TAG);
     }
 }
