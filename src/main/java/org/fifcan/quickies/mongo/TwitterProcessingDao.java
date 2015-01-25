@@ -27,7 +27,8 @@ public class TwitterProcessingDao {
     public TweetProcessing getTweeterVoteProcessing() throws UsernameNotFoundException {
         TweetProcessing tweetProcessing = mongoTemplate.findOne(new Query(Criteria.where("type").is(TweetProcessing.TYPE_VOTE)), TWEET_PROCESSING_CLASS);
 
-        if (tweetProcessing == null) return TweetProcessing.createFirstTweeterVoteProcessing();
+        if (tweetProcessing == null)
+            return TweetProcessing.createFirstTweeterVoteProcessing();
 
         return tweetProcessing;
     }

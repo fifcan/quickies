@@ -1,10 +1,12 @@
 package org.fifcan.quickies.controller;
 
 import org.fifcan.quickies.Menu;
+import org.springframework.social.facebook.api.Facebook;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.inject.Inject;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -17,7 +19,7 @@ public class HomeController {
 
     @RequestMapping(value="/")
     public String index(){
-        return "redirect:/userGroupSessions";
+        return "index";
     }
 
 }

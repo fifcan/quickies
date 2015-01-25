@@ -11,11 +11,18 @@ import org.fifcan.quickies.mongo.UserGroupDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.social.connect.Connection;
+import org.springframework.social.connect.ConnectionRepository;
+import org.springframework.social.facebook.api.Facebook;
+import org.springframework.social.facebook.api.PagedList;
+import org.springframework.social.facebook.api.Post;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.inject.Inject;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -28,6 +35,16 @@ import java.util.stream.Collectors;
 public class UserGroupSessionController {
 
     public static final Logger log = Logger.getLogger(UserGroupSessionController.class);
+
+    private Facebook facebook;
+
+    private ConnectionRepository connectionRepository;
+
+    @Inject
+    public UserGroupSessionController(Facebook facebook, ConnectionRepository connectionRepository) {
+        this.facebook = facebook;
+        this.connectionRepository = connectionRepository;
+    }
 
     @Autowired
     SessionDao sessionDao;
@@ -47,6 +64,26 @@ public class UserGroupSessionController {
         model.addAttribute("menu", Menu.USER_GROUP_SESSION);
 
         model.addAttribute("userGroupSession", new UserGroupSession());
+
+        if (connectionRepository != null){
+            log.info("connectionRepository="+connectionRepository);
+            MultiValueMap<String, Connection<?>> allConnections = connectionRepository.findAllConnections();
+            for(String key : allConnections.keySet()){
+                List<Connection<?>> connections = allConnections.get(key);
+                for(Connection<?> conn : connections){
+                    log.info(String.format("connexion: key=[%s] name=[%s] profile=[%s]", key, conn.getDisplayName(), conn.getProfileUrl()));
+                }
+            }
+        }
+
+        if (facebook.isAuthorized()) {
+            model.addAttribute(facebook.userOperations().getUserProfile());
+            PagedList<Post> homeFeed = facebook.feedOperations().getHomeFeed();
+            model.addAttribute("feed", homeFeed);
+
+        }
+
+
 
         return "userGroupSessions";
     }

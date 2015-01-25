@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="fragments/head :: head">...</th:block>
+</head>
+<body>
+<div class="container">
+<div th:include="fragments/header :: header">...</div>
+
+        <div class="row">
+
+            <div class="col-sm-9">
+
+                <div class="jumbotron">
+                    <h2>Quickies</h2>
+                    <p>Quoi de neuf dans le monde Java et sa galaxie d'utilisateurs ... ?</p>
+                    <p><a class="btn btn-primary" role="button" th:href="@{/userGroupSessions}">Découvrir les sessions</a></p>
+                </div>
+
+            </div>
+
+            <div class="col-sm-3">
+
+                <p>
+                    <input  class="form-control" type="text" id="search" name="search" value="" placeholder="Rechercher" />
+                </p>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title" th:text="#{future-userGroupSession}"></h3>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item" th:each="nextSession : ${nextSessions}" th:value="${nextSession.id}" th:text="${nextSession.name}"></li>
+                    </ul>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title" th:text="#{top-votes-future}"></h3>
+                    </div>
+                    <ul id="top-votes-future" class="list-group top-votes"/>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title" th:text="#{top-votes-past}"></h3>
+                    </div>
+                    <ul id="top-votes-past" class="list-group top-votes"/>
+                </div>
+
+            </div>
+
+        </div>
+</div> <!-- /container -->
+
+<script type="text/javascript">
+    refreshTopVotes();
+</script>
+</body>
+</html>

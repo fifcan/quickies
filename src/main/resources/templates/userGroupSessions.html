@@ -51,6 +51,21 @@
                     <ul id="top-votes-past" class="list-group top-votes"/>
                 </div>
 
+                <div th:if="${facebookProfile != null}">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Facebook <span th:text="${facebookProfile.name}"></span></h3>
+                        </div>
+                        <ul class="list-group" style="height:200px; overflow:auto;">
+                            <li th:each="post:${feed}" class="clearfix">
+                                <img th:if="${post.picture}" th:src="${post.picture}" class="pull-right img-rounded" style="max-width:60px; max-height:60px" data-holder-rendered="true"/>
+                                <b class="small" th:text="${post.from.name}"></b>
+                                <p class="small"  th:text="${post.message}"></p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
             </div>
 
         </div>

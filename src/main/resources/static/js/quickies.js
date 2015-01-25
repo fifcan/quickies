@@ -22,7 +22,7 @@ var renderTopPreviousVote = function(userGroupSession){
 
 function createBootstrapPanel(){
     var $panel = $('<div />').addClass('panel').addClass('panel-default');
-    $panel.append($('<div class="panel-heading"/>').append($('<h3 class="panel-title"><span class="eventDate label label-info" /> <i class="fa fa-github" /> <span class="title" /></h3>')));
+    $panel.append($('<div class="panel-heading"/>').append($('<h3 class="panel-title"><span class="eventDate label label-default" /> <i class="glyphicon glyphicon-tag" /> <span class="title" /></h3>')));
     $panel.append($('<div class="panel-body"/>'));
     $panel.append($('<div class="panel-footer clearfix"></div>'));
     return $panel;
@@ -44,10 +44,12 @@ var renderUserGroupSession = function(userGroupSession){
     $panel.find('.panel-body').append($('<span />').text(userGroupSession.description));
     var $panelHeading = $panel.find('.panel-heading');
     $panelHeading.find("span.title").text(userGroupSession.name);
-    $panelHeading.find("span.eventDate").text(eventDate);
+    $panelHeading.find("span.eventDate").text(eventDate).addClass("pull-right");
     var $panelFooter = $panel.find('.panel-footer');
-    var $btnVote = $('<button type="button" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-thumbs-up"></span></button>').data("userGroupSession", userGroupSession.id).click(vote);
+    var $btnVote = $('<button type="button" class="btn btn-default btn-xs pull-right"><i class="glyphicon glyphicon-thumbs-up" /</button>').data("userGroupSession", userGroupSession.id).click(vote);
     $panelFooter.append($btnVote);
+    var $location = $('<button type="button" class="btn btn-default btn-xs pull-right"><i class="glyphicon glyphicon-map-marker"/> Genève</button>');
+    $panelFooter.append($location);
     $('#userGroupSessions').append($panel);
 };
 
@@ -69,16 +71,18 @@ function refreshTopVotes(){
         $('.top-votes').empty();
 
         var nextSessions = data['topNext'];
-
-        $.each(nextSessions, function(i, session){
-            renderTopNextVote(session);
-        });
+        if(nextSessions){
+            $.each(nextSessions, function(i, session){
+                renderTopNextVote(session);
+            });
+        }
 
         var previousSessions = data['topPrevious'];
-
-        $.each(previousSessions, function(i, session){
-            renderTopPreviousVote(session);
-        });
+        if (previousSessions){
+            $.each(previousSessions, function(i, session){
+                renderTopPreviousVote(session);
+            });
+        }
 
     });
 }

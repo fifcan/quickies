@@ -57,7 +57,7 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter implements Comm
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/login").setViewName("login");
+        registry.addViewController("/login").setViewName("userGroupSessions");
     }
 
     @Override
@@ -124,21 +124,55 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter implements Comm
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
+
+
             http
+                    .authorizeRequests()
+                    .antMatchers("/connect/facebook**").permitAll()
+                    .antMatchers("/login").permitAll()
+                    .antMatchers("/logout").permitAll()
+                    .antMatchers("/").permitAll()
+                    .antMatchers("/api/userGroupSession").permitAll()
+                    .antMatchers("/api/userGroupSession/vote/top").permitAll()
+                    .antMatchers("/userGroupSessions").permitAll()
+                    .antMatchers("/css/**").permitAll()
+                    .antMatchers("/fonts/**").permitAll()
+                    .antMatchers("/js/**").permitAll()
+                    .antMatchers("/admin/**").hasRole("ADMIN")
+                    .anyRequest().authenticated()
+                    .and()
+                    .formLogin()
+                    .loginPage("/login")
+                    .and()
+                    .logout()
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                    .logoutSuccessUrl("/")
+                    .deleteCookies("JSESSIONID")
+                    .invalidateHttpSession(true)
+                    // The session management is used to ensure the user only has one session. This isn't
+                    // compulsory but can add some extra security to your application.
+                    .and()
+                    .sessionManagement()
+                    .invalidSessionUrl("/")
+                    .maximumSessions(1);
 
-                    // access-denied-page: this is the page users will be
-                // redirected to when they try to access protected areas.
-                .exceptionHandling()
-                .accessDeniedPage("/403")
-                .and()
 
-                // The intercept-url configuration is where we specify what roles are allowed access to what areas.
-                // We specifically force the connection to https for all the pages, although it could be sufficient
-                // just on the login page. The access parameter is where the expressions are used to control which
-                // roles can access specific areas. One of the most important things is the order of the intercept-urls,
-                // the most catch-all type patterns should at the bottom of the list as the matches are executed
-                // in the order they are configured below. So /** (anyRequest()) should always be at the bottom of the list.
-                .authorizeRequests()
+
+//            http
+//
+//                    // access-denied-page: this is the page users will be
+//                // redirected to when they try to access protected areas.
+//                .exceptionHandling()
+//                .accessDeniedPage("/403")
+//                .and()
+//
+//                // The intercept-url configuration is where we specify what roles are allowed access to what areas.
+//                // We specifically force the connection to https for all the pages, although it could be sufficient
+//                // just on the login page. The access parameter is where the expressions are used to control which
+//                // roles can access specific areas. One of the most important things is the order of the intercept-urls,
+//                // the most catch-all type patterns should at the bottom of the list as the matches are executed
+//                // in the order they are configured below. So /** (anyRequest()) should always be at the bottom of the list.
+//                .authorizeRequests()
 //                    .antMatchers("/login**").permitAll()
 //                    .antMatchers("/").permitAll()
 //                    .antMatchers("/userGroupSessions").permitAll()
@@ -146,19 +180,19 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter implements Comm
 //                    .antMatchers("/fonts/**").permitAll()
 //                    .antMatchers("/js/**").permitAll()
 //                    .antMatchers("/admin/**").hasRole( "ADMIN" )
-                .anyRequest().permitAll()//.authenticated()
-                //.and()
-                //.requiresChannel()
-                //.anyRequest().requiresSecure() // TODO force HTTPS
-                //.and()
-
-                // This is where we configure our login form.
-                // login-page: the page that contains the login screen
-                // login-processing-url: this is the URL to which the login form should be submitted
-                // default-target-url: the URL to which the user will be redirected if they login successfully
-                // authentication-failure-url: the URL to which the user will be redirected if they fail login
-                // username-parameter: the name of the request parameter which contains the username
-                // password-parameter: the name of the request parameter which contains the password
+//                .anyRequest().authenticated()
+//                .and()
+//                //.requiresChannel()
+//                //.anyRequest().requiresSecure() // TODO force HTTPS
+//                //.and()
+//
+//                // This is where we configure our login form.
+//                // login-page: the page that contains the login screen
+//                // login-processing-url: this is the URL to which the login form should be submitted
+//                // default-target-url: the URL to which the user will be redirected if they login successfully
+//                // authentication-failure-url: the URL to which the user will be redirected if they fail login
+//                // username-parameter: the name of the request parameter which contains the username
+//                // password-parameter: the name of the request parameter which contains the password
 //                .formLogin()
 //                .loginPage("/login")
 //                .loginProcessingUrl("/login")
@@ -167,26 +201,23 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter implements Comm
 //                .usernameParameter("username")
 //                .passwordParameter("password")
 //                .and()
-
-                // This is where the logout page and process is configured. The logout-url is the URL to send
-                // the user to in order to logout, the logout-success-url is where they are taken if the logout
-                // is successful, and the delete-cookies and invalidate-session make sure that we clean up after logout
+//
+//                // This is where the logout page and process is configured. The logout-url is the URL to send
+//                // the user to in order to logout, the logout-success-url is where they are taken if the logout
+//                // is successful, and the delete-cookies and invalidate-session make sure that we clean up after logout
 //                .logout()
 //                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-////                .logoutSuccessUrl("/login?out=1")
+//                .logoutSuccessUrl("/login?out=1")
 //                .deleteCookies("JSESSIONID")
 //                .invalidateHttpSession(true)
-                .and()
-
-                .csrf().disable() // put back
-
-                // The session management is used to ensure the user only has one session. This isn't
-                // compulsory but can add some extra security to your application.
-                .sessionManagement()
-                .invalidSessionUrl("/login?time=1")
-                .maximumSessions(1)
-
-            ;
+//                // The session management is used to ensure the user only has one session. This isn't
+//                // compulsory but can add some extra security to your application.
+//                    .and()
+//                .sessionManagement()
+//                .invalidSessionUrl("/login?time=1")
+//                .maximumSessions(1)
+//
+//            ;
         }
 
         @Override
