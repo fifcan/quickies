@@ -50,7 +50,7 @@ var renderUserGroupSession = function(userGroupSession){
     $panelFooter.append($btnVote);
     var $location = $('<button type="button" class="btn btn-default btn-xs pull-right"><i class="glyphicon glyphicon-map-marker"/> Genève</button>');
     $panelFooter.append($location);
-    $('#userGroupSessions').append($panel);
+    return $panel;
 };
 
 function refreshUserGroupSessions(){
@@ -59,7 +59,18 @@ function refreshUserGroupSessions(){
     }).done(function( data ) {
         $('#userGroupSessions').empty();
         $.each(data, function(i, item){
-            renderUserGroupSession(item);
+            $('#userGroupSessions').append(renderUserGroupSession(item));
+        });
+    });
+}
+
+function refreshNextSessions(){
+    $.ajax({
+        url: "/api/userGroupSession/next"
+    }).done(function( data ) {
+        $('#nextUserGroupSessions').empty();
+        $.each(data, function(i, item){
+            $('#nextUserGroupSessions').append(renderUserGroupSession(item));
         });
     });
 }

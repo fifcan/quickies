@@ -45,8 +45,14 @@ public class UserGroupSessionRestController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/api/userGroupSession")
-    public ResponseEntity<List<UserGroupSession>> getUsers() {
+    public ResponseEntity<List<UserGroupSession>> getSessions() {
         List<UserGroupSession> sessions = sessionDao.listSessions();
+        return new ResponseEntity<List<UserGroupSession>>(sessions, HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/api/userGroupSession/next")
+    public ResponseEntity<List<UserGroupSession>> getNextSession() {
+        List<UserGroupSession> sessions = sessionDao.findNextSessions();
         return new ResponseEntity<List<UserGroupSession>>(sessions, HttpStatus.OK);
     }
 
@@ -57,6 +63,7 @@ public class UserGroupSessionRestController {
         return new ResponseEntity<UserGroupSession>(userGroupSession, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN') or (principal != 'anonymousUser' and principal.id == #userId)")
     @RequestMapping(method = RequestMethod.GET, value = "/api/userGroupSession/{id}/vote")
     public void voteUserGroupSession(@PathVariable(value="id") String userGroupSessionId) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

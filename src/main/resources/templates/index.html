@@ -22,6 +22,8 @@
                     <p><a class="btn btn-primary" role="button" th:href="@{/userGroupSessions}">Découvrir les sessions</a></p>
                 </div>
 
+                <div id="nextUserGroupSessions" />
+
             </div>
 
             <div class="col-sm-3">
@@ -59,6 +61,7 @@
 </div> <!-- /container -->
 
 <script type="text/javascript">
+    refreshNextSessions();
     refreshTopVotes();
 </script>
 </body>

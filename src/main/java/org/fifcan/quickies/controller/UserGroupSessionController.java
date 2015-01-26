@@ -65,17 +65,6 @@ public class UserGroupSessionController {
 
         model.addAttribute("userGroupSession", new UserGroupSession());
 
-        if (connectionRepository != null){
-            log.info("connectionRepository="+connectionRepository);
-            MultiValueMap<String, Connection<?>> allConnections = connectionRepository.findAllConnections();
-            for(String key : allConnections.keySet()){
-                List<Connection<?>> connections = allConnections.get(key);
-                for(Connection<?> conn : connections){
-                    log.info(String.format("connexion: key=[%s] name=[%s] profile=[%s]", key, conn.getDisplayName(), conn.getProfileUrl()));
-                }
-            }
-        }
-
         if (facebook.isAuthorized()) {
             model.addAttribute(facebook.userOperations().getUserProfile());
             PagedList<Post> homeFeed = facebook.feedOperations().getHomeFeed();

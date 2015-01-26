@@ -129,15 +129,14 @@ public class WebMvcConfiguration extends WebMvcConfigurerAdapter implements Comm
         @Override
         protected void configure(HttpSecurity http) throws Exception {
 
-
+            // TODO security à faire : liste des URL publics
             http
                     .authorizeRequests()
-                    .antMatchers("/connect/facebook**").permitAll()
+                    .antMatchers("/connect/**").permitAll()
                     .antMatchers("/login").permitAll()
                     .antMatchers("/logout").permitAll()
                     .antMatchers("/").permitAll()
-                    .antMatchers("/api/userGroupSession").permitAll()
-                    .antMatchers("/api/userGroupSession/vote/top").permitAll()
+                    .antMatchers("/api/**").permitAll()
                     .antMatchers("/userGroupSessions").permitAll()
                     .antMatchers("/css/**").permitAll()
                     .antMatchers("/fonts/**").permitAll()
