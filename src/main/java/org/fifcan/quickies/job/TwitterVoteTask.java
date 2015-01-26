@@ -14,7 +14,7 @@ public class TwitterVoteTask {
     @Autowired
     TwitterService twitterService;
 
-    @Scheduled(fixedRate = 5000L)
+    @Scheduled(fixedRate = 30000L)
     public void loadTwitterVote() {
         twitterService.processNextTwitterVotes();
     }
