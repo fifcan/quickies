@@ -27,6 +27,10 @@ public class SessionDao {
         this.mongoTemplate = mongoTemplate;
     }
 
+    public List<UserGroupSession> findSessionsByGroupId(String userGroupId) {
+        return mongoTemplate.find(new Query(Criteria.where("userGroup").is(userGroupId)), USER_GROUP_SESSION_CLASS);
+    }
+
     public UserGroupSession findSessionById(String id) {
         return mongoTemplate.findOne(new Query(Criteria.where("id").is(id)), USER_GROUP_SESSION_CLASS);
     }
