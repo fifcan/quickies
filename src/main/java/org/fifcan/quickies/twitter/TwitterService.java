@@ -10,7 +10,10 @@ import org.fifcan.quickies.mongo.TwitterProcessingDao;
 import org.fifcan.quickies.mongo.UserDao;
 import org.fifcan.quickies.mongo.VoteDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.social.twitter.api.*;
+import org.springframework.social.twitter.api.impl.TwitterTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -50,6 +53,13 @@ public class TwitterService {
 
     @Autowired
     TwitterProcessingDao twitterProcessingDao;
+
+    @Bean
+    public Twitter twitter(final @Value("${spring.social.twitter.app-id}") String appId,
+                           final @Value("${spring.social.twitter.app-secret}") String appSecret) {
+
+        return new TwitterTemplate(appId, appSecret);
+    }
 
     public List<Tweet> getAllTweets() {
 
