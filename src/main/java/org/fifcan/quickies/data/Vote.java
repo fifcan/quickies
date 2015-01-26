@@ -1,8 +1,6 @@
 package org.fifcan.quickies.data;
 
-import org.springframework.data.mongodb.core.index.CompoundIndex;
-import org.springframework.data.mongodb.core.index.CompoundIndexes;
-import org.springframework.data.mongodb.core.index.Indexed;
+import com.google.common.base.Objects;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -55,4 +53,25 @@ public class Vote extends AbstractData {
         this.userGroupSession = userGroupSession;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+
+        final Vote other = (Vote) obj;
+
+        return Objects.equal(this.user.getId(), other.getUser().getId())
+                && Objects.equal(this.userGroupSession, other.userGroupSession)
+                ;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(this.user.getId(), this.userGroupSession);
+    }
 }

@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @Service
 public class TwitterService {
 
-    static final String VOTE_TAG = "#Vote";
+    static final String VOTE_TAG = "#vote";
 
     static final String HASH_TAG = "#";
 
